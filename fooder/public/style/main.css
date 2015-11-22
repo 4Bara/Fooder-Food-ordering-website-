@@ -1,0 +1,221 @@
+html,body{
+    padding-top:0;
+    margin:0;
+}
+#main_logo{
+    font-size:55pt;
+    color:white;
+    margin:auto 50px;
+    width:20%;
+    position: relative;
+}
+.navbar{
+    background-color:#6c0a00;
+}
+#nav_bar_content p{
+    float:left;
+}
+#nav_bar_left{
+    float:left;
+}
+#nav_bar_right button{
+    float:right;
+    margin-right:15px;
+}
+#shopping_cart{
+    background-color:yellow;
+    color:white;
+    margin-top:100px;
+}
+#shopping_cart *{
+    float:right;
+}
+
+/*Main Page CSS*/
+.footer {
+    position:fixed;
+    left:0px;
+    bottom:0px;
+    height:30px;
+    width:100%;
+    text-align: center;
+}
+
+
+.search-result{
+    border:2px solid black;
+    height:20%;
+}
+.search-result #logo{
+    float:left;
+    height:150px;
+    margin-right:10px;
+}
+.search-result #restaurant_name{
+    font-size:x-large
+}
+.search-result #price_range span{
+    font-size:medium;
+    color:green;
+}
+.search-result #restaurant_rating span{
+    font-size:medium;
+    color:orange;
+}
+.search-result p{
+    margin:0px;
+}
+.search-result #price_range{
+    font-size:medium;
+}
+.search-filter{
+    background-color: beige;
+    width:100%;
+}
+.search-result label{
+    float:left;
+}
+#search-filter-title{
+    font-size:x-large;
+    margin:5px;
+    margin-left:5px;
+}
+.search-filter{
+    border:2px solid darkgray;
+}
+.search-filter #search-filter-form .row{
+    margin-top:10px;
+    margin-left:20px;
+}
+.offer-box #offer-picture{
+    width:100%;
+}
+.offer-box #offer_title{
+    font-size:x-large;
+}
+.offer-box #offer_price{
+    font-size: x-large;
+    color:red;
+}
+.offer-box{
+    border:2px solid black;
+    text-align: center;
+}
+.offer-box #offer_restaurant{
+    font-size: medium;
+}
+
+/*Profile Page*/
+#left-side{
+    border:1px solid blue;
+    background-color:antiquewhite;
+    text-align: center;
+}
+#user-info-box{
+    margin:10px;
+    text-align: left;
+}
+#left-side #profile-picture{
+    width:90%;
+}
+#user-info-box #user_username{
+    font-size:25pt;
+}
+#user-info-box #user_bio{
+    font-size:14pt;
+    width:70%;
+}
+#user-info-box #user_location{
+    font-size:12pt;
+    color:darkblue;
+}
+#middle-section{
+    border:1px solid #b9def0;
+}
+#activites-section{
+    border:1px solid black;
+}
+#activity{
+    border:1px solid green;
+}
+#activity-content{
+    font-size:xx-large;
+}
+#activity-picture{
+    width:20%;
+    float:left;
+    margin:10px;
+}
+#activity-date{
+
+}
+#user-followers{
+    font-size:x-large;
+}
+#favorite-restaurants img,#favorite-offers img, #favorite-menus img{
+    width:30%;
+    margin:2px;
+}
+
+
+/* Registeration Page */
+
+#registeration_page_content {
+    background-color:darkred;
+    color:white;
+    text-align: left;
+    margin-bottom:30px;;
+}
+#registeration_page_content label{
+    width:40%;
+    display:inline-block;
+}
+#registeration_page_content label[id=question-user]{
+    width:100%;
+    text-align: center
+}
+#form-container{
+    width:100%;
+    margin:0 auto;
+    text-align: center;
+}
+#form-container input{
+    color:black;
+    width:50%;
+    font-size:large;
+}
+#form-container .form-group .opening_days .times{
+    font-size: 7pt;
+    width: 20%;
+    margin-top: 10px;
+    font-weight: bold;
+}
+.opening_days input[type=checkbox]{
+    width: 30%;
+    height: 13px;
+    padding: 0px 0px 0px 0px;
+    margin: 5px 0px 0px -30px;
+}
+.opening_days label{
+    margin:5px;
+}
+.restaurant .opening_days label{
+    padding:0px;
+    margin:0px;
+    width:40%;
+}
+.opening_days{
+    width:55%;
+    float: right;
+    text-align: left;
+}
+.restaurant textarea{
+    width:50%;
+}
+
+#submit-button{
+    color:red;
+}
+select{
+    width:50%;
+}
