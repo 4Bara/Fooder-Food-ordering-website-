@@ -10,8 +10,24 @@
 | and give it the controller to call when that URI is requested.
 |
 */
-
+/*
+ * Home Controller Routing
+ */
 Route::get('/','HomeController@index');
-Route::post('/addAccount','RegisterationController@newAccount');
-Route::get('profile','HomeController@profile');
+Route::get('p/{username}','HomeController@profile');
+Route::get('login','HomeController@login');
+Route::get('logout','HomeController@logout');
 Route::get('registration','HomeController@registration');
+/*
+ * Registeration controller routing
+ */
+Route::post('/addAccount','RegisterationController@newAccount');
+/*
+ * Login controller routing
+ */
+Route::post('/login','loginController@login');
+/*
+ * Users Action Controller
+ */
+Route::post('addLike','userActions@addLike');
+Route::post('follow','userActions@follow');

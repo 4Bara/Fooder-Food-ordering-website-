@@ -2,35 +2,53 @@ html,body{
     padding-top:0;
     margin:0;
 }
-#main_logo{
+#main_logo a{
     font-size:55pt;
-    color:white;
-    margin:auto 50px;
-    width:20%;
+    color:black;
+    /*margin:auto 50px;*/
+    margin-left:20px;
     position: relative;
 }
+#main_logo a:hover{
+    color:black;
+    text-decoration: none;
+}
 .navbar{
-    background-color:#6c0a00;
-}
-#nav_bar_content p{
-    float:left;
-}
-#nav_bar_left{
-    float:left;
-}
-#nav_bar_right button{
-    float:right;
-    margin-right:15px;
-}
-#shopping_cart{
-    background-color:yellow;
-    color:white;
-    margin-top:100px;
-}
-#shopping_cart *{
-    float:right;
+    background-color:#e8e8dc;
 }
 
+
+#nav_bar_right {
+    text-align: right;
+}
+#nav_bar_right button{
+    background-color: #e8e8dc;
+    color:black;
+    font-size:15pt;
+}
+#nav_bar_right button:hover{
+    text-decoration: underline;
+}
+#shopping_cart #img{
+    width:50px;
+    margin-right:15px;
+    margin-top: 28px;
+}
+#shopping_cart {
+   position:relative;
+   float:right;
+}
+#profilelinkimg{
+    width:40px;
+    position:relative;
+    float:right;
+    margin-right: 25px;
+    margin-top: 30px;
+}
+#profilelink{
+    float: right;
+    width: 65px;
+}
 /*Main Page CSS*/
 .footer {
     position:fixed;
@@ -69,7 +87,7 @@ html,body{
     font-size:medium;
 }
 .search-filter{
-    background-color: beige;
+    background-color:black;
     width:100%;
 }
 .search-result label{
@@ -107,16 +125,26 @@ html,body{
 
 /*Profile Page*/
 #left-side{
-    border:1px solid blue;
-    background-color:antiquewhite;
+ background-color: #e8e8dc;
+    border: 1px solid gray;
+    border-radius: 25px;
     text-align: center;
+}
+#left-side #profile-picture{
+   width:90%;
+    border-radius: 15px 15px 15px 15px;
+    padding:5px;
 }
 #user-info-box{
     margin:10px;
     text-align: left;
 }
-#left-side #profile-picture{
-    width:90%;
+#compliment{
+    background-color: white;
+    border-radius: 25px;
+}
+#compliment img{
+    width:25px;
 }
 #user-info-box #user_username{
     font-size:25pt;
@@ -160,9 +188,10 @@ html,body{
 
 /* Registeration Page */
 
-#registeration_page_content {
-    background-color:darkred;
-    color:white;
+#registeration_page_content{
+    border-radius: 25px;
+    background-color:#e8e8dc;
+    color:black;
     text-align: left;
     margin-bottom:30px;;
 }
@@ -218,4 +247,15 @@ html,body{
 }
 select{
     width:50%;
+}
+/*Login Page*/
+#login-page{
+    text-align: center;
+    background-color:#e8e8dc;
+    border-radius: 25px;
+    /*font-size:pt;*/
+}
+#error{
+    border-radius: 15px;
+    padding:2px;
 }

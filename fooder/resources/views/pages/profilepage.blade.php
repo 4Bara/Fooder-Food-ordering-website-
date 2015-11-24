@@ -1,12 +1,61 @@
 @extends('layouts.default')
+@section('style')
+    <script src="{{asset("../public/javascript/user.js")}}" ></script>
+@stop
 @section('content')
+
+    @if(isset($data['visitor_id']))
+    <input type="hidden" id="visitor_id" value="{{$data['visitor_id']}}"/>
+    @endif
+
     <div class="col-md-3" id="left-side">
         <img id="profile-picture" src="https://fbcdn-sphotos-e-a.akamaihd.net/hphotos-ak-xaf1/v/t1.0-9/10628249_10152393424262462_9177899944359276523_n.jpg?oh=e1ecf09dcc256fae98f9b0457b007a35&oe=56B16FDE&__gda__=1458004842_9780c4fe105b588eecc6e094fe9044d6"/>
         <div id="user-info-box">
-            <h3>Who i am:</h3>
-            <p id="user_username">Name:<span>4Bara</span></p>
-            <p id="user_bio">I am a tech enthusist , worked really hard to be here, i hate war and love humans.</p>
-            <p id="user_location">Amman,Jordan</p>
+            <div class="row">
+                <div class="col-xs-12">
+                    <label>Name: <span>{{$aUser['user']->first_name}} {{$aUser['user']->last_name}}</span></label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <label>Bio:</label> <p>this is a test bio that will be used in exmaining and testing the website design.</p>
+                    {{--{{$user->user_bio}}--}}
+                </div>
+            </div>
+            @if(isset($data['country']))
+                <div class="row">
+                    <div class="col-xs-12">
+                        <label>Find me in:</label><p>{{$data['country']}}</p>
+                        {{--{{$user->user_bio}}--}}
+                    </div>
+                </div>
+            @endif
+            <input id="token" type="hidden" name="_token" value="{{ Session::token() }}">
+            <input type="hidden" id="id_user" value="{{$aUser['user']->id_user}}"/>
+            @if(isset($data['profileOwner']) && $data['profileOwner']=='no')
+                @if(!empty($data['visitor_id']))
+                <div class="row">
+                    <div class="col-xs-12">
+                        <Button id="compliment">Give me a like <img src="{{asset("../public/like.jpg")}}"/></Button>
+                    </div>
+                </div>
+
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <Button id="follow">Follow me!</Button>
+                        </div>
+                    </div>
+                @endif
+            @endif
+            @if(isset($aUser['rating']))
+                <div class="row">
+                    <div class="col-xs-12">
+                        <label>I Have <span>{{$aUser['rating']}} Likes</span></label>
+                        {{--{{$user->user_bio}}--}}
+                    </div>
+                </div>
+            @endif
+            {{--<p id="user_location"></p>--}}
             <p id="user-followers">24k Followers</p>
         </div>
     </div>

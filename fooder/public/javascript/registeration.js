@@ -14,7 +14,6 @@ $(document).ready(function() {
         $(".person").show();
     });
     $(".days").change(function(){
-
         if(this.checked) {
             var nameOfTheDay = $(this).attr("name");
             $("#"+nameOfTheDay+"_hours_from").prop("disabled",false);

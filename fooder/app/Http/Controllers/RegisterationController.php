@@ -47,6 +47,8 @@ class RegisterationController extends controller
 
         //Check user type if person send it to person registeration function, if not send it to resturant's
         if($aRequest['user_kind']=='person') {
+           $aRequest['user_type']=$aRequest['user_kind'];
+           $aRequest['user_status']='active';
            $this->addNormalUser($aRequest);
         }else if($aRequest['user_kind']=='restaurant') {
             $this->addRestaurantUser($aRequest);
@@ -71,7 +73,12 @@ class RegisterationController extends controller
         $aUser['password']= Hash::make($aUser['password']);
 
         DB::table('users')->insert($aUser);
-        //Redirect to page..
+
+        $dIdUser= DB::table('users')->where(array('username'=>$aUser['username']))->get(array('id_user'));
+
+        DB::table('user_rating')->insert(array('id_user'=>$dIdUser[0]->id_user,'likes_count'=>0));
+        echo "You've registered successfully!";
+        return redirect()->intended('/');
     }
     /*
      *  This function will be used everytime i need to add a new restaurant
@@ -117,6 +124,7 @@ class RegisterationController extends controller
         DB::table('restaurants')->insert($aRestaurant);
         //redirect to page..
         echo "Restaurant Has been registered succesfully";
+        return redirect()->intended('/');
     }
 
 }
