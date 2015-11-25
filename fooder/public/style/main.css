@@ -259,3 +259,90 @@ select{
     border-radius: 15px;
     padding:2px;
 }
+
+/*
+Restaurants Pages
+*/
+
+#restuarnat-page-logo{
+    width:120px;
+}
+.restaurant-name{
+    font-size:35pt;
+}
+.restaurant-left{
+    border:2px solid black;
+}
+.restaurant-left .row{
+    margin-top:10px;
+}
+.bio-div p{
+    font-size:16pt;
+    border:1px solid firebrick;;
+    padding:5px;
+}
+.bio-div #about-us{
+    color:white;
+    background-color: firebrick;;
+}
+.address div,.telephone div,.reviews div,.rating div,.price-range div,.cuisines div{
+    margin:5px;
+}
+.address,.telephone,.reviews,.rating,.price-range ,.cuisines{
+    font-weight: bold;
+    font-size: large;
+}
+.price-range span{
+    color:darkgreen;
+    font-size:15pt;
+}
+.restaurant-open{
+    background-color:green;
+    color:white;
+}
+.restaurant-close{
+    background-color: darkred;
+    color:white;
+}
+.restaurant-status p{
+    padding:2px;
+    text-align: center;
+    font-size:20px;
+}
+.offers-box{
+    border:1px solid black;
+    text-align: center;
+}
+.offers-box p{
+    font-size:25pt;
+}
+
+#offers-box-logo{
+    height:200px;
+}
+.images-box .images img,.reviews-box .reviews img{
+    width:250px;
+    padding:2px;
+}
+.images-box,.reviews-box{
+    border:1px solid lightgray;
+    text-align: center;
+}
+.images-box p,.reviews-box p {
+    font-size:xx-large;
+}
+.restaurant-admin-panel{
+    background-color:cornflowerblue;
+    text-align: center;
+}
+.restaurant-admin-panel span{
+    float:left;
+    font-size:xx-large;
+    color:white;
+}
+.restaurant-admin-panel a{
+    padding:5px;
+    margin:5px;
+    color:white;
+    font-size: xx-large;
+}

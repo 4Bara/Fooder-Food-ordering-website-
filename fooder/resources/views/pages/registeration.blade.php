@@ -37,8 +37,9 @@
             <div class="restaurant form-group">
                 <label class="control-label col-sm-2">Food Type "Cusine"</label>
                 <select name="cuisines" id="cuisines">
-                    <option id="1">Chinese Food</option>
-                    <option id="2">Itlian Food</option>
+                    @foreach($aData['aCuisines'] as $oCuisine)
+                            <option id="{{$oCuisine->id_cuisine}}" value="{{$oCuisine->id_cuisine}}">{{$oCuisine->name}}</option>
+                    @endforeach
                 </select>
             </div>
             <div class="restaurant form-group">

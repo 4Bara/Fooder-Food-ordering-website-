@@ -51,6 +51,7 @@ class RegisterationController extends controller
            $aRequest['user_status']='active';
            $this->addNormalUser($aRequest);
         }else if($aRequest['user_kind']=='restaurant') {
+            dd($aRequest);
             $this->addRestaurantUser($aRequest);
         }
     }

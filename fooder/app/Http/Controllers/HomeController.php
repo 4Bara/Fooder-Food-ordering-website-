@@ -44,12 +44,17 @@ class HomeController extends controller
              * 1:50 AM 11/17/2015
              * Bara Hasaniya
              */
+            $aCuisines = DB::table('cuisines')->get(array('*'));
             $aCountries = DB::table('countries')->get(array('*'));
             $aGender = array(1 => 'Male', 2 => 'Female');
+//            dd($aCuisines[0]->id_cuisine);
+//            dd($aCuisines[1]['id_cuisines']);
             $aData = array(
                 'aCountries' => $aCountries,
-                'aGender' => $aGender
+                'aGender' => $aGender,
+                'aCuisines'=>$aCuisines
             );
+           // dd($aData['aCuisines']);
             return view('pages.registeration')->with('aData', $aData);
         }
         /*
@@ -62,36 +67,78 @@ class HomeController extends controller
          */
 
         public function profile($sUsername){
+            //Get if the user is logged in or not
             $bLoggedIn = \Session::get("loggedin");
+
+            //In default the profile's vistor is not the owner of it.
             $bProfileOwner = 'no';
+
+            /*
+             * If this variable is empty then the user is not logged in at all.
+             */
             $dVisitorId='';
             if($bLoggedIn == 'true'){
                 $bLoggedIn = 'yes';
                 $dVisitorId= \Session::get('id_user');
                 $sUser = \Session::get('username');
+
+                /*
+                 * Check if this page is for the logged in uesr
+                 * to show him more options.
+                 */
                 if($sUsername == \Session::get('username')){
                     $bProfileOwner ='yes';
                 }
             }else{
                 $bLoggedIn ='no';
             }
+
+            /*
+             * @data @Array that will contain all data for the logged in user 'or not logged in' ;)
+             */
             $data= array(
                 'logged'=>$bLoggedIn,
                 'profileOwner'=>$bProfileOwner,
             );
+
+            /*
+             * Get the username and put it in data
+             */
             if(!empty($sUser)){
                 $data['username']=$sUser;
             }
+            /*
+             * Get the Id of the logged in user
+             */
             if(!empty($dVisitorId)){
                 $data['visitor_id']=$dVisitorId;
             }
+            /*
+             * Check if the user is a normal user 'Customers'
+             */
             $aUserData = DB::table('users')->where(array('username'=>$sUsername))->get(array("id_user","username","first_name","last_name","email","id_country","gender","age","user_bio","user_mobile","user_status","user_type"));
             if(empty($aUserData)){
-                $aUserData = DB::table('restaurants')->where(array('username'=>$sUsername))->get(array('username'));
+                /*
+                 * Being here means that the username is not for a normal user,
+                 * Check restauarant's table to check if the username is for a restaurant.
+                 */
+                $aParams = array('username','id_restaurant','id_country','restaurant_name','email','telephone','twitter_account','bio','price_range','cuisines','opening_days','smoking_allowed','provide_ordering','website','rating');
+                $aUserData = DB::table('restaurants')->where(array('username'=>$sUsername))->get($aParams);
                 if(empty($aUserData)) {
+                    /*
+                     * If it came here means the username is not in the system
+                     * redirect the viewer to the home directory,
+                     * or maybe 'page not(404)found page'
+                     */
                     return redirect()->intended('/');
                 }
-                return view('pages.restaurantpage');
+               // dd($aUserData);
+               // foreach($aParams as $sParam) {
+                    $oRestarant = $aUserData[0];
+               // }
+                //dd($oRestarant);
+                //username is for a restaurant, Redirect it to the restaurant's page.
+                return view('pages.restaurantpage')->with(array('data'=>$data,'restaurant'=>$oRestarant));
             }
             $aUserRating = DB::table('user_rating')->where(array('id_user'=>$aUserData[0]->id_user))->get(array('likes_count'));
             //Get the country of the profile's owner
