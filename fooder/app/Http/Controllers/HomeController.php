@@ -153,7 +153,7 @@ class HomeController extends controller
             return view("pages.login");
         }
         public function logout(){
-            \Session::put('loggedin','false');
+            \Session::flush();
             return redirect()->intended('/');
         }
 

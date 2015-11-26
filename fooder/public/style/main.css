@@ -346,3 +346,24 @@ Restaurants Pages
     color:white;
     font-size: xx-large;
 }
+
+
+/*
+* Add Item Page style
+*/
+
+.form-add-item{
+    border:1px solid black;
+    border-radius: 25px;
+    background-color:#e8e8dc;
+    font-size:large;
+}
+
+.form-add-item .row{
+}
+.form-add-item .title{
+    text-align: center;
+}
+.col-xs-4 #add_new_item_button{
+    margin:0 auto;
+}

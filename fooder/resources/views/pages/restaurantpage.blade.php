@@ -103,7 +103,7 @@
        </div>
     <div class="col-md-8">
         <div class="row restaurant-admin-panel">
-           <span>Settings:</span> <a href="menus">Menus</a>|<a href="offers">Offers</a>|<a href="items">items</a>
+           <span>Settings:</span> <a href="menus">Menus</a>|<a href="offers">Offers</a>|<a href="{{URL::asset('p/'.$restaurant->username.'/addNewItemPage')}}">items</a>
         </div>
         <div class="row">
             <div class="offers-box col-md-6">

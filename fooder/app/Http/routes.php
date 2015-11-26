@@ -31,3 +31,9 @@ Route::post('/login','loginController@login');
  */
 Route::post('addLike','userActions@addLike');
 Route::post('follow','userActions@follow');
+
+/*
+ * Restaurant's page routings
+ */
+Route::get('p/{username}/addNewItemPage','restaurantController@addNewItemPage');
+Route::post('p/{username}/backend/addNewItem','restaurantController@addNewItem');
