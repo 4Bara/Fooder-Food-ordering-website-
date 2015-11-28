@@ -27,10 +27,11 @@ class LoginController extends controller
        if(empty($aResult)){
            //Check if the user is a restaurant
            $aResult= DB::table('restaurants')->where(array('username'=>$sUsername))->get(array('*'));
-           $sUserType='restaurant';
+           $sUserType = 'restaurant';
            \Session::put('loggedin','true');
            \Session::put('username',$sUsername);
            \Session::put('id_user',$aResult[0]->id_restaurant);
+           \Session::put('user_type',$sUserType);
            //PUT THE SESSION FOR THE RESTAURANT
            return redirect()->intended('/');
        }

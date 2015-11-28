@@ -2,6 +2,7 @@
  * Created by Bara on 11/12/2015.
  */
 jQuery(document).ready(function(){
+
 var base_url = "http://localhost/fooder/app/Http/Controllers";
     $.ajaxSetup({
         headers: {

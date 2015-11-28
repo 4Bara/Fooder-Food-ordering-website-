@@ -1,6 +1,5 @@
 <meta name="description" content="">
 <meta name="author" content="Bara">
-{!! csrf_field() !!}
 <title>Fooder</title>
 <link rel="stylesheet" href={{asset("../public/libraries/bootstrap/css/bootstrap.min.css")}} />
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>

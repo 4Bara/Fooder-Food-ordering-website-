@@ -30,7 +30,8 @@ $(document).ready(function() {
     });
     var base_url = "http://localhost/fooder/app/Http/Controllers";
     //This button will submit the registeration form
-    $("#submit-button").on("click",function(){
+    $("#registeration-form-submit-button").on("click",function(){
+
         //if(!validate_form()){
         //    return false;
         //}

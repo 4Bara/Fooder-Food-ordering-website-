@@ -35,5 +35,19 @@ Route::post('follow','userActions@follow');
 /*
  * Restaurant's page routings
  */
+//This will redirect the user to add new item page
 Route::get('p/{username}/addNewItemPage','restaurantController@addNewItemPage');
+//this will add the item to the DB
 Route::post('p/{username}/backend/addNewItem','restaurantController@addNewItem');
+
+//This should show offers list
+Route::get('p/{username}/offers','restaurantController@showOffers');
+//Create new offer by the user
+Route::get('p/{username}/newOffer','restaurantController@addNewOffer');
+
+//this should create new menu by the user
+Route::get('p/{username}/newMenu','restaurantController@addNewMenu');
+//Show all menus for that restaurant
+Route::get('p/{username}/menus','restaurantController@showMenus');
+//Add Menu to DB
+Route::post('p/{username}/backend/addNewMenu','restaurantController@newMenu');

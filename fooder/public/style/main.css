@@ -187,7 +187,16 @@ html,body{
 
 
 /* Registeration Page */
-
+.title-row{
+    text-align: center;
+    font-size:30pt;
+}
+.row .radios{
+    text-align: center;
+}
+#person{
+    margin-top:8px;
+}
 #registeration_page_content{
     border-radius: 25px;
     background-color:#e8e8dc;
@@ -196,8 +205,8 @@ html,body{
     margin-bottom:30px;;
 }
 #registeration_page_content label{
-    width:40%;
-    display:inline-block;
+    /*width:40%;*/
+    /*display:inline-block;*/
 }
 #registeration_page_content label[id=question-user]{
     width:100%;
@@ -208,45 +217,51 @@ html,body{
     margin:0 auto;
     text-align: center;
 }
-#form-container input{
-    color:black;
-    width:50%;
-    font-size:large;
+/*#form-container input{*/
+    /*color:black;*/
+    /*width:100%;*/
+    /*font-size:large;*/
+/*}*/
+/*#form-container .form-group .opening_days .times{*/
+    /*font-size: 7pt;*/
+    /*width: 20%;*/
+    /*margin-top: 10px;*/
+    /*font-weight: bold;*/
+/*}*/
+
+.days-checkboxes{
+   width:10%;
+    padding-right:0px;
 }
-#form-container .form-group .opening_days .times{
-    font-size: 7pt;
-    width: 20%;
-    margin-top: 10px;
+.times{
+    width:60%;
+}
+.day-title{
+    width:20%;
+    padding:0px;
+    font-size: 8pt;
     font-weight: bold;
 }
-.opening_days input[type=checkbox]{
-    width: 30%;
-    height: 13px;
-    padding: 0px 0px 0px 0px;
-    margin: 5px 0px 0px -30px;
-}
-.opening_days label{
-    margin:5px;
-}
-.restaurant .opening_days label{
-    padding:0px;
-    margin:0px;
-    width:40%;
-}
-.opening_days{
-    width:55%;
-    float: right;
+.time-picker{
+    width: 31%;
+    padding: 0px;
     text-align: left;
+    margin-left:15px;
 }
-.restaurant textarea{
-    width:50%;
+.no-margin{
+    margin:0px;
 }
+/*.opening_days{*/
+    /*width:55%;*/
+    /*float: right;*/
+    /*text-align: left;*/
+/*}*/
 
 #submit-button{
     color:red;
 }
 select{
-    width:50%;
+    width:100%;
 }
 /*Login Page*/
 #login-page{
@@ -366,4 +381,105 @@ Restaurants Pages
 }
 .col-xs-4 #add_new_item_button{
     margin:0 auto;
+}
+
+/*Offers Page Style*/
+.offer-list{
+    border:1px solid black;
+
+}
+/*Offer Image*/
+.offer-list #offer-img{
+    /*margin-top:20px;*/
+    width: 100%;
+    border:2px solid #D3FBFF;
+}
+/*Offer's Title*/
+.offer-list .offer-title p{
+    margin:0px;
+    font-size:x-large;
+}
+.offer-list .offer-dsec p{
+    margin:0px;
+    font-size:large;
+}
+.menu-page-container{
+text-align: center;
+}
+.menu-page{
+    margin-left:15%;
+}
+.menu-page .restaurant-name{
+    font-size:24pt;
+}
+.menu-page .page-title{
+    font-size:25pt;
+}
+.menu-page .offer-price{
+    font-size:25pt;
+}
+.item{
+    border:solid 2px black;
+    margin-top:5px;
+}
+.col-xs-1{
+    width:10%;
+}
+.item #item-img{
+    width:100%;
+}
+.item-description p{
+    text-align: left;
+}
+
+/*Add New Menu Page Styling*/
+.add-menu-title{
+    text-align: center;
+}
+.add-menu-title h3{
+    font-size:30pt;
+}
+#add-new-menu p{
+    font-size:x-large;
+}
+#add-new-menu .row{
+    margin-top:10px;
+}
+#add-new-menu{
+    margin-bottom:20px;
+}
+#menu-submit-button{
+    background-color: #2ca02c;
+    color:white;
+}
+.add-menu{
+    background-color: ghostwhite;
+}
+
+/* MenusList page style*/
+.menu-box{
+    border:1px black solid;
+    margin:5px;
+    text-align: center;
+    border-radius: 25px;
+    overflow: hidden;
+}
+.menu-box #menu-cover{
+    width:100%;
+
+}
+.menu-box #menu-title{
+    background-color:darkgray;
+    color:white;
+    font-size:14pt;
+}
+.menu-box #menu-description{
+    background-color:#f2f2f2;
+    color:orange;
+}
+.menus-list{
+    text-align: center;
+}
+.menus{
+    text-align: center;
 }

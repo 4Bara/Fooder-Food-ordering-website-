@@ -76,7 +76,7 @@
             </div>
             <div class="row">
                 <div class="col-xs-4">
-                    <input type="submit"class="form-control" value="Add Item" />
+                    <input type="submit" class="form-control" value="Add Item" />
                 </div>
             </div>
         </form>
