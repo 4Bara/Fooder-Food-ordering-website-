@@ -14,7 +14,7 @@
                    {{$restaurant->restaurant_name}}
                </div>
                <div class="send-feed-back-button">
-                   <button id="sendFeedBack">Got Feedback ?</button>
+                   <button id="sendFeedBack" class="form-control">Got Feedback ?</button>
                </div>
            </div>
        </div>
@@ -80,7 +80,7 @@
                    <label>Rating :</label>
                </div>
                <div class="col-xs-2">
-                   <span id="tel-span">Goooood!!</span>
+                   <span>Goooood!!</span>
                </div>
            </div>
         <div class="row">
@@ -103,7 +103,7 @@
        </div>
     <div class="col-md-8">
         <div class="row restaurant-admin-panel">
-           <span>Settings:</span> <a href="{{URL::asset('p/'.$restaurant->username.'/newMenu')}}">Menus</a>|<a href="{{URL::asset('p/'.$restaurant->username.'/newOffer')}}">Offers</a>|<a href="{{URL::asset('p/'.$restaurant->username.'/addNewItemPage')}}">items</a>
+           <span>Control Panel:</span> <a href="{{URL::asset('p/'.$restaurant->username.'/newMenu')}}">New Menu</a>|<a href="{{URL::asset('p/'.$restaurant->username.'/newOffer')}}">New Offer</a>|<a href="{{URL::asset('p/'.$restaurant->username.'/addNewItemPage')}}">New Item</a>
         </div>
         <div class="row">
             <div class="offers-box col-md-6">
@@ -112,7 +112,8 @@
             </div>
             <div class="offers-box col-md-6">
                 <p>Our Menus:</p>
-                <a href="{{URL::asset('p/'.$restaurant->username.'/menus')}}"><img id="offers-box-logo" src="http://tiffanythai.com/wp-content/uploads/2014/02/Menu_Relief_Logo_cmyk_V1-380x380.jpg"/></a>
+                {{--value="{{$restaurant->username}}"--}}
+                <a id='showMenus' href="{{URL::asset('p/'.$restaurant->username.'/menus?username='.$restaurant->username)}}"><img id="offers-box-logo" src="http://tiffanythai.com/wp-content/uploads/2014/02/Menu_Relief_Logo_cmyk_V1-380x380.jpg"/></a>
             </div>
         </div>
         <div class="images-box row">

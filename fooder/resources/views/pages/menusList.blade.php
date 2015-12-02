@@ -4,60 +4,27 @@
 @section('content')
     <div  class="col-lg-12 menus">
         <h1>Menus</h1>
-        <div class="col-md-3">
-        </div>
-        <div class="col-md-7">
-
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
             <div class="menus-list">
-                <div class="col-md-5">
+                @foreach($menus as $menu)
+                <div class="col-md-6">
                     <div class="menu-box">
-                        <img id="menu-cover" src="http://www.secondhomemalaysia.co.uk/uploads/Food3.jpg" />
-                        <p id="menu-title">TITLE</p>
+                        <a href="{{asset('/menu?id='.$menu->id_menu)}}">
+                        <img id="menu-cover" src="{{$menu->picture}}" />
+                        <p id="menu-title">{{$menu->name}}</p>
                         <p id="menu-description">
-                            This is the descriptuoin
+                           {{$menu->description}}
                         </p>
+                        </a>
                     </div>
                 </div>
-                <div class="col-md-5">
-                    <div class="menu-box">
-                        <img id="menu-cover" src="http://www.secondhomemalaysia.co.uk/uploads/Food3.jpg" />
-                        <p id="menu-title">TITLE</p>
-                        <p id="menu-description">
-                            This is the descriptuoin
-                        </p>
-                    </div>
-                </div>
-                <div class="col-md-5">
-                    <div class="menu-box">
-                        <img id="menu-cover" src="http://www.secondhomemalaysia.co.uk/uploads/Food3.jpg" />
-                        <p id="menu-title">TITLE</p>
-                        <p id="menu-description">
-                            This is the descriptuoin
-                        </p>
-                    </div>
-                </div>
-                <div class="col-md-5">
-                    <div class="menu-box">
-                        <img id="menu-cover" src="http://www.secondhomemalaysia.co.uk/uploads/Food3.jpg" />
-                        <p id="menu-title">TITLE</p>
-                        <p id="menu-description">
-                            This is the descriptuoin
-                        </p>
-                    </div>
-                </div>
-                <div class="col-md-5">
-                    <div class="menu-box">
-                        <img id="menu-cover" src="http://www.secondhomemalaysia.co.uk/uploads/Food3.jpg" />
-                        <p id="menu-title">TITLE</p>
-                        <p id="menu-description">
-                            This is the descriptuoin
-                        </p>
-                    </div>
+                @endforeach
+                <div class="row">
+                 {!! $menus->render() !!}
                 </div>
             </div>
         </div>
-        <div class="col-md-2">
-
-        </div>
+        <div class="col-md-2"></div>
     </div>
 @stop

@@ -6,15 +6,22 @@
 @stop
 @section('content')
 <div class="col-lg-3">
-
 </div>
 <div class="col-lg-6 add-menu">
         <div class="row">
             <div class="add-menu-title">
-                <h3>Make a New Menu</h3>
+                @if($data['page_type']=='offer')
+                    <h3>Make a New Offer</h3>
+                @elseif($data['page_type']=='menu')
+                    <h3>Make a New Menu</h3>
+                @endif
             </div>
         </div>
-    <form method="post" action="backend/addNewMenu" enctype="multipart/form-data" name="newMenuForm" id="add-new-menu">
+    @if($data['page_type']=='menu')
+        <form method="post" action="backend/addNewMenu" enctype="multipart/form-data" name="newMenuForm" id="add-new-menu">
+    @else
+        <form method="post" action="backend/addNewOffer" enctype="multipart/form-data" name="newMenuForm" id="add-new-menu">
+    @endif
         <input type="hidden" name="_token" value="{{ Session::token() }}">
         <div class="row">
             <div class="col-xs-6">

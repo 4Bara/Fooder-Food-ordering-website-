@@ -8,63 +8,70 @@
         <div class="row">
             <div class="col-xs-12">
                 <div class="page-title">
-                    <p>Page Title{offers/Menus}</p>
+                    @if($data['page_type']=='menu')
+                    <p>{{$menu->name}}</p>
+                    @elseif($data['page_type']=='offer')
+                        <p>{{$offer->name}}</p>
+                    @endif
                 </div>
             </div>
         </div>
         <div class="row">
              <div class="col-xs-4">
                 <div class="restaurant-name">
-                    Restaurant Name Goes HERE!!
+                    {{$restaurant->restaurant_name}}
                 </div>
              </div>
              <div class="col-xs-4">
 
              </div>
             <div class="col-xs-4">
+                @if($data['page_type']=='offer')
                     <div class="offer-price">
                         <p>PRICE:123$</p>
                     </div>
+                @endif
             </div>
         </div>
+        @foreach($items as $item)
         <div class="row item">
             <div class="col-xs-2 ">
-                <img id="item-img" src="http://www.houstonlocal.news/wp-content/uploads/2015/09/bjs-free-pizookie-600p.jpg"/>
+                <img id="item-img" src="{{$item->picture}}"/>
             </div>
             <div class="col-xs-2">
                 <div class="item-tile">
-                    <h3>Title</h3>
-                    <p>Title Goes HERE!!</p>
+                    <h3>Name</h3>
+                    <p>{{$item->name}}</p>
                 </div>
             </div>
             <div class="col-xs-2">
                 <div class="item-description">
                     <h3>Description</h3>
-                    <p>Descriotuin goes here,so the description of an item should be inserted!!</p>
+                    <p>{{$item->description}}</p>
                 </div>
             </div>
             <div class="col-xs-1">
                 <div class="item-healthy">
                     <h3>Healthy</h3>
-                    <p>YYES</p>
+                    <p>{{$item->healthy}}</p>
                 </div>
             </div>
             <div class="col-xs-1">
                 <div class="item-spicy">
                     <h3>spicy</h3>
-                    <p>YES</p>
+                    <p>{{$item->spicy}}</p>
                 </div>
             </div>
             <div class="col-xs-1">
                 <div class="item-spicy">
                     <h3>Price</h3>
-                    <p>5 JD</p>
+                    <p>{{$item->price}}</p>
                 </div>
             </div>
             <div class="col-xs-1">
                 <div class="item-count">
                     <h3>Units</h3>
-                        <input id="spinner"  class='spinner' style="width:20px" name="value">
+                        <input id="item_qty" class='spinner' style="width:20px" name="item_qty">
                 </div>
             </div>
             <div class="col-xs-1">
@@ -73,8 +80,8 @@
                     <input type="button" name="add_item_to_cart" id="add-to-cart" value="Add">
                 </div>
             </div>
-
         </div>
+        @endforeach
         <div class="row item">
             <div class="col-xs-2 ">
                 <img id="item-img" src="http://www.houstonlocal.news/wp-content/uploads/2015/09/bjs-free-pizookie-600p.jpg"/>

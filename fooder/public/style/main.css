@@ -348,18 +348,17 @@ Restaurants Pages
 }
 .restaurant-admin-panel{
     background-color:cornflowerblue;
+   font-size:15pt;
     text-align: center;
 }
 .restaurant-admin-panel span{
     float:left;
-    font-size:xx-large;
     color:white;
 }
 .restaurant-admin-panel a{
     padding:5px;
     margin:5px;
     color:white;
-    font-size: xx-large;
 }
 
 
@@ -455,31 +454,45 @@ text-align: center;
 .add-menu{
     background-color: ghostwhite;
 }
-
 /* MenusList page style*/
+.menus-list{
+    background-color:lightgray;
+    border-radius: 12px;
+}
 .menu-box{
-    border:1px black solid;
-    margin:5px;
+    border:1px solid lightgray;
+    margin:0px;
     text-align: center;
     border-radius: 25px;
     overflow: hidden;
+    margin:6px;
 }
 .menu-box #menu-cover{
     width:100%;
-
 }
 .menu-box #menu-title{
     background-color:darkgray;
     color:white;
     font-size:14pt;
+    margin:0px;
 }
 .menu-box #menu-description{
     background-color:#f2f2f2;
     color:orange;
+    font-size:large;
+    margin:0px;
+}
+.menu-box #menu-description{
+
 }
 .menus-list{
     text-align: center;
 }
 .menus{
     text-align: center;
+}
+.pagination{
+    border:1px solid black;
+    font-size:15pt;
+
 }

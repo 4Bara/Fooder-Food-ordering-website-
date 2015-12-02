@@ -8,11 +8,12 @@ $(document).ready(function(){
     });
 
     $('#menu-submit-button').on('submit',function(){
-
         data= new FormData($('#add-new-menu'));
         $(':file').each(function() {
             data.append(this);
         });
+        alert(data);
+        die();
         $.ajax({
             url:'/backend/addNewMenu',
             type:'POST',
