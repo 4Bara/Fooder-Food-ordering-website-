@@ -10,8 +10,8 @@
         <p>Registeration Page</p>
         </div>
         <div id="form-container">
-        <form id="registeration-form" class="form-horizontal"  method="post">
-            <input type="hidden" name="_token" value="{{ Session::token() }}">
+        <form id="registeration-form" class="form-horizontal"  method="post" enctype="multipart/form-data">
+            <input type="hidden" name="_token" value="{{ Session::getToken() }}">
             <div class="form-group">
                 <div class="row">
                     <div class="col-xs-6">
@@ -86,6 +86,29 @@
                     <div class="col-xs-6">
                     <textarea rows="5" class="form-control" type="text" name="bio"></textarea>
                     </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="restaurant form-group">
+                    <div class="col-xs-5">
+                        <label class="control-label">Logo</label>
+                    </div>
+                    <div class="col-xs-6">
+                        <input type="file" class="form-control" name="logo"/>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-5">
+                    <label class="control-label">Country</label>
+                </div>
+                <div class="col-xs-6">
+                    <select name="id_country" id="countries">
+                        {{--HERE YOU SHOULD PRINT THE VALUE OF COUNTRIES ARRAY--}}
+                        @foreach($aData['aCountries'] as $oCountry)
+                            <option id="{{$oCountry->id_country}}" value="{{$oCountry->id_country}}">{{$oCountry->country_name}}</option>
+                        @endforeach
+                    </select>
                 </div>
             </div>
             <div class="row">
@@ -299,20 +322,6 @@
                     <div class="col-xs-6">
                         <input class="form-control"  type="email" name="email"/>
                     </div>
-                </div>
-            </div>
-
-            <div class="row">
-                    <div class="col-xs-5">
-                         <label class="control-label">Country</label>
-                    </div>
-                <div class="col-xs-6">
-                    <select name="id_country" id="countries">
-                        {{--HERE YOU SHOULD PRINT THE VALUE OF COUNTRIES ARRAY--}}
-                        @foreach($aData['aCountries'] as $oCountry)
-                        <option id="{{$oCountry->id_country}}" value="{{$oCountry->id_country}}">{{$oCountry->country_name}}</option>
-                        @endforeach
-                    </select>
                 </div>
             </div>
             <div class="row">

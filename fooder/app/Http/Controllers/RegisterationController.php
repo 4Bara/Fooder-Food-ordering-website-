@@ -6,6 +6,7 @@
  * Time: 12:57 AM
  */
 namespace App\Http\Controllers;
+
 use App\Http\Requests\Request;
 use DB;
 use App\Http\Controllers\Controller;
@@ -26,7 +27,9 @@ class RegisterationController extends controller
                                 'twitter_account'];
 
     public function newAccount(){
+
         $aRequest = \Input::all();
+
         //check if there is an account with the same username there
         $aTables = array('users','restaurants');
 
@@ -61,14 +64,20 @@ class RegisterationController extends controller
     private function addNormalUser($aRequest){
         $aUser = array();
         foreach ($this->aUserParams as $sParam){
-            if (isset($aRequest[$sParam])) {
-                if($sParam == "username"){
-                    $aRequest[$sParam]=strtolower($aRequest[$sParam]);
-                }
-                $aUser[$sParam] = $aRequest[$sParam];
-            }
+            switch($sParam) {
+                case "username":
+                    $aUser[$sParam] = strtolower($aRequest[$sParam]);
+                    break;
+                case "logo":
+                    $aUser[$sParam] = Actions::uploadPhotos($aRequest['logo'], 'logo');
+                    break;
+                default:
+                    $aUser[$sParam] = $aRequest[$sParam];
+                    break;
+                 }
         }
-        $aUser['date_registered']=date('Y-m-d h:m:s');
+
+        $aUser['date_registered']=date('Y-m-d h:i:s');
         $aUser['age']=$aRequest['date_of_birth'];
         //Hashing the password to be saved encrypted
         $aUser['password']= Hash::make($aUser['password']);
@@ -85,47 +94,89 @@ class RegisterationController extends controller
      *  This function will be used everytime i need to add a new restaurant
      *  to the data base
      */
+    /**
+     * @param $aRequest
+     * @return \Illuminate\Http\RedirectResponse
+     */
     private function addRestaurantUser($aRequest){
         $aRestaurant = array();
         //Loop throghout Restaurant's Params array, and put the values to be processed and saved into the database.
-        foreach($this->aRestaurantParams as $sParam){
-            if(isset($aRequest[$sParam])){
-                if($sParam=='username'){
-                    $aRequest[$sParam]=strtolower($aRequest[$sParam]);
-                }
-                $aRestaurant[$sParam]=$aRequest[$sParam];
-            }
-        }
+
         /*
-         * $aDays @array contains all the days names to loop throw them when checking the $aRequest variable for values
-         */
+      * $aDays @array contains all the days names to loop throw them when checking the $aRequest variable for values
+      */
+        $aOpeningDays= array();
         $aDays = array('sunday','monday','tuesday','wednesday','thursday','friday','saturday');
         foreach($aDays as $sDay){
             if(isset($aRequest[$sDay])){
                 //Each day we need to check the from and to timeings, if date is not there put no instead.
-                $aOpeningDays [$sDay]["from"] = isset($aRequest[$sDay.'_from'])?$aRequest[$sDay.'_from']:'no';
-                $aOpeningDays [$sDay]["to"]  =isset($aRequest[$sDay.'_to'])?$aRequest[$sDay.'_to']:'no';
+                $aOpeningDays[$sDay]["from"] = isset($aRequest[$sDay.'_from'])?$aRequest[$sDay.'_from']:'no';
+                $aOpeningDays[$sDay]["to"]  =isset($aRequest[$sDay.'_to'])?$aRequest[$sDay.'_to']:'no';
             }
         }
         //Encoding them into jason to make them easier to be parsed
         $sOpeningDays = json_encode($aOpeningDays);
-        $aRestaurant['opening_days'] = $sOpeningDays;
-        $aRestaurant['date_registered'] = date('Y-m-d h:m:s');
-        if(isset($aRequest['smoking_allowed'])){
-            $aRestaurant['smoking_allowed']='yes';
-        }else{
-            $aRestaurant['smoking_allowed']='no';
+
+        foreach ($this->aRestaurantParams as $sParam){
+            switch($sParam) {
+                case "username":
+                    $aRestaurant[$sParam] = strtolower($aRequest[$sParam]);
+                    break;
+                case "logo":
+                    $aRestaurant[$sParam] = $this->uploadPhotos($aRequest['logo'], 'logo');
+                    break;
+                case 'location':break;
+                case 'opening_days':break;
+                case 'opening_hours':break;
+                case 'price_range':break;
+                case 'twitter_account':break;
+                case 'aOpeningDays':
+                    $aRestaurant['opening_days'] = $sOpeningDays;
+                break;
+                case 'somking_allowed':
+                    if(isset($aRequest[$sParam]))
+                        $aRestaurant['smoking_allowed']="yes";
+                    else
+                        $aRestaurant['smoking_allowed']="no";
+                break;
+                case 'provide_ordering':
+                    if(isset($aRequest[$sParam])){
+                        $aRestaurant['provide_ordering']='yes';
+                    }else{
+                        $aRestaurant['provide_ordering']='no';
+                    }
+                break;
+                case 'date_registered':
+                    $aRestaurant[$sParam]=date('Y-m-d h:i:s');
+                break;
+                case 'password':
+                    $aRestaurant['password']=Hash::make($aRequest['password']);
+                break;
+                default:
+                    $aRestaurant[$sParam] = $aRequest[$sParam];
+                break;
+            }
         }
-        if(isset($aRequest['delivery'])){
-            $aRestaurant['provide_ordering']='yes';
-        }else{
-            $aRestaurant['provide_ordering']='no';
-        }
-        $aRestaurant['password']=Hash::make($aRequest['password']);
+
         DB::table('restaurants')->insert($aRestaurant);
         //redirect to page..
         echo "Restaurant Has been registered succesfully";
         return redirect()->intended('/');
+    }
+
+    public function uploadPhotos($oImage,$sfile){
+        $sDestination=  'images/photos/';
+        //$sName =$oImage->getClientOriginalName();
+        // dd($sDestination);
+        $sDate=date('YmdHis');
+        if(\Request::file($sfile)->move($sDestination, $sDate.$oImage->getClientOriginalName())){
+            //Asset will give you the directory of public folders, that will be used in saving photos to it!
+            //  dd(asset($oImage->getClientOriginalName()));
+            return asset($sDestination.$sDate.$oImage->getClientOriginalName());
+        }
+        else {
+            return false;
+        }
     }
 
 }

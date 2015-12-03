@@ -18,7 +18,19 @@ var base_url = "http://localhost/fooder/app/Http/Controllers";
             }
         });
     });
-
+    $('#search').on("click",function(){
+        var data = $("#search-filter-form").serialize();
+        var searchTerm  = $("#search-term").val();
+        data+="&searchTerm="+searchTerm;
+        $.ajax({
+            url:"search",
+            data:data,
+            type:"POST",
+            success:function(data){
+                alert(data);
+            }
+        });
+    });
     $('login-button').on('click',function(){
        alert('yes');
     });

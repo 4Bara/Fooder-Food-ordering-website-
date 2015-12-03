@@ -65,7 +65,7 @@
             <div class="col-xs-4" style="text-align: center">
                 @if($data['page_type']=='menu')
                  <p>Menu Items</p>
-                @else
+                @elseif($data['page_type']=='offer')
                  <p>Offer Items</p>
                 @endif
             </div>
@@ -88,7 +88,7 @@
                 <select name="food[]" id="js_multiselect_to_1" class="form-control" size="8" multiple="multiple"></select>
             </div>
         </div>
-        @if($data['page_type']!='menu')
+        @if($data['page_type']=='offer')
             <div class="row">
                 <div class="col-xs-6"><p>Total Price:</p></div>
                 <div class="col-xs-3"><input type="text" name="offer_price" class="form-control"/></div>
@@ -96,7 +96,11 @@
         @endif
         <div class="row">
             <div class="col-xs-12">
-                <button type="submit" id="menu-submit-button" class="form-control">Create Menu</button>
+                @if($data['page_type']=='offer')
+                    <button type="submit" id="menu-submit-button" class="form-control">Create Offer</button>
+                @elseif($data['page_type'=='menu'])
+                    <button type="submit" id="menu-submit-button" class="form-control">Create Offer</button>
+                @endif
             </div>
         </div>
     </form>
