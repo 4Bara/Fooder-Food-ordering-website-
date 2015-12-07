@@ -30,22 +30,30 @@ $(document).ready(function() {
     });
     var base_url = "http://localhost/fooder/app/Http/Controllers";
     //This button will submit the registeration form
-    $("#registeration-form-submit-button").on("click",function(){
-
+    $("#registeration-form-submit-button").on("click",function(e){
+        e.preventDefault();
         //if(!validate_form()){
         //    return false;
         //}
-        var form_data = $("#registeration-form").serialize();
+
+
+        var form_data = new FormData($("#registeration-form")[0]);
           $(".days:checked").each(function(){
               var dayname= $(this).attr("name");
               var from ='&'+dayname+"_from="+ $("#"+dayname+"_hours_from").val()+"&";
               var to = dayname+"_to="+ $("#"+dayname+"_hours_to").val();
               //put the results into form_data to be sent to php
-            form_data+=from+to;
+            form_data.append("from",from);
+            form_data.append("to",to);
           });
+        //$(":file").each(function(){
+        //    var file = this.files[0];
+        //});
         $.ajax({
             url:"addAccount",
             type:"POST",
+            processData: false,
+            contentType: false,
             data:form_data,
             success:function(data){
                 alert(data);

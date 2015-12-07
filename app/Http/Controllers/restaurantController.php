@@ -11,7 +11,9 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
+
 use DB;
+use Illuminate\View\View;
 
 class restaurantController extends controller
 {
@@ -71,25 +73,28 @@ class restaurantController extends controller
         } else{
             return view('/pages.addItemPage')->withErrors("Something is wrong, we are sorry ! :( ");
         }
+
     }
 
     //This function will redirect the user to the page of offers, remember to include the variable that will be used
     //in destingush between menus and offers pages ! :D
-    public function showOffers(){
-        $aSession = \Session::all();
-       // dd($aSession);
-        $this->validateUser($aSession);
-
-        $aData = array(
-            'user_type'=>$aSession['user_type'],
-            'id_user'=>$aSession['id_user'],
-            'page_type'=>'menu',
-        );
-        $aPageData = array(
-            'page_type'=>'offer',
-            'page_id'=>'id_offer'
-        );
-        return view('/pages.menu')->with(array('data'=>$aData));
+    public function showOffers($username){
+        $aRestaurantData =  DB::table('restaurants')->where(array('username'=>$username))->get(array('id_restaurant'));
+        if(empty($aRestaurantData)){
+            //Go the previous page
+        }
+        $dIdRestaurant = $aRestaurantData[0]->id_restaurant;
+        //  dd($dIdRestaurant);
+        $aMenus = DB::table('offers')->
+        where(array('id_restaurant'=>$dIdRestaurant,'status'=>'active'))->paginate(2);
+        $aMenus->setPath('offers');
+        $aMenus->appends(["username"=>$username]);
+//                    get(array('id_menu','id_category','id_creator','picture','name','description'));
+        $aData = array('page_type'=>"offer");
+        //dd($aMenus);
+        //dd(\Request::all());
+        // dd($aMenus);
+        return view('/pages.menusList')->with(array('menus'=>$aMenus,'data'=>$aData));
     }
     public function showMenus($username){
        $aRestaurantData =  DB::table('restaurants')->where(array('username'=>$username))->get(array('id_restaurant'));
@@ -99,14 +104,37 @@ class restaurantController extends controller
         $dIdRestaurant = $aRestaurantData[0]->id_restaurant;
       //  dd($dIdRestaurant);
         $aMenus = DB::table('menus')->
-                    where(array('id_restaurant'=>$dIdRestaurant,'status'=>'active'))->paginate(6);
-        $aMenus->setPath('username='.$username);
+                    where(array('id_restaurant'=>$dIdRestaurant,'status'=>'active'))->paginate(2);
+        $aMenus->setPath('menus');
+        $aMenus->appends(["username"=>$username]);
 //                    get(array('id_menu','id_category','id_creator','picture','name','description'));
         //dd($aMenus);
         //dd(\Request::all());
        // dd($aMenus);
         return view('/pages.menusList')->with(array('menus'=>$aMenus));
     }
+    public function showOffer(){
+        $aRequest = \Request::all();
+        if(!isset($aRequest['id'])){
+            return redirect('/');
+        }
+        $aOffer = DB::table('offers')->where(array('id_offer'=>$aRequest['id']))->get(array('*'));
+        $oOffer = $aOffer[0];
+        $aRestaurant = DB::table('restaurants')->where(array('id_restaurant'=>$oOffer->id_restaurant))->get(array('restaurant_name'));
+        $oRestaurant= $aRestaurant[0];
+
+        $aOfferItems = DB::table('offer_items')->where(array('id_offer'=>$aRequest['id']))->get(array("*"));
+
+        foreach($aOfferItems as $oOfferItem){
+            $aItemsIds = json_decode($oOfferItem->items);
+        }
+
+        $aData = array('page_type'=>'offer');
+        $aItems = DB::table('food')->whereIn('id_item',$aItemsIds)->get(array('*'));
+
+        return view('/pages.menu')->with(array('data'=>$aData,'restaurant'=>$oRestaurant,'offer'=>$oOffer,'items'=>$aItems));
+    }
+
     public function showMenu(){
         $aRequest = \Request::all();
         if(!isset($aRequest['id'])){

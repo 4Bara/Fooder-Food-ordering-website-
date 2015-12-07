@@ -87,7 +87,7 @@ html,body{
     font-size:medium;
 }
 .search-filter{
-    background-color:black;
+   background-color:lightgray;;
     width:100%;
 }
 .search-result label{

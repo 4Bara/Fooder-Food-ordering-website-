@@ -18,6 +18,7 @@ Route::get('p/{username}','HomeController@profile');
 Route::get('login','HomeController@login');
 Route::get('logout','HomeController@logout');
 Route::get('registration','HomeController@registration');
+Route::post('search','HomeController@search');
 /*
  * Registeration controller routing
  */
@@ -41,7 +42,7 @@ Route::get('p/{username}/addNewItemPage','restaurantController@addNewItemPage');
 Route::post('p/{username}/backend/addNewItem','restaurantController@addNewItem');
 
 //This should show offers list
-Route::get('p/{username}/offers','restaurantController@showOffers');
+Route::get('p/{username}/offers/{data?}','restaurantController@showOffers');
 //Create new offer by the user
 Route::get('p/{username}/newOffer','restaurantController@addNewOffer');
 //Add Offer to DB
@@ -60,3 +61,4 @@ Route::post('p/{username}/backend/addNewMenu','restaurantController@newMenu');
  */
 
 Route::get('menu/{data?}','restaurantController@showMenu');
+Route::get('offer/{data?}','restaurantController@showOffer');

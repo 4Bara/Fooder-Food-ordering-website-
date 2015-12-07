@@ -7,7 +7,7 @@
    <div class="restaurant-left col-md-4">
        <div class="row">
            <div class="col-xs-4">
-               <img id='restuarnat-page-logo' src="https://cdn3.iconfinder.com/data/icons/social-circle/512/pinterest-512.png"/>
+               <img id='restuarnat-page-logo' src="{{$restaurant->logo}}"/>
            </div>
            <div class="col-xs-8">
                <div class="restaurant-name">
@@ -108,7 +108,7 @@
         <div class="row">
             <div class="offers-box col-md-6">
                <p>Our Offers:</p>
-                <img id="offers-box-logo" src="http://englishsuccessacademy.com/wp-content/uploads/2015/03/iStock_000019127111XSmall.jpg"/>
+               <a id="showOffers" href="{{URL::asset('p/'.$restaurant->username.'/offers?username='.$restaurant->username)}}"><img id="offers-box-logo" src="http://englishsuccessacademy.com/wp-content/uploads/2015/03/iStock_000019127111XSmall.jpg"/></a>
             </div>
             <div class="offers-box col-md-6">
                 <p>Our Menus:</p>

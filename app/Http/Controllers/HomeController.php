@@ -122,7 +122,7 @@ class HomeController extends controller
                  * Being here means that the username is not for a normal user,
                  * Check restauarant's table to check if the username is for a restaurant.
                  */
-                $aParams = array('username','id_restaurant','id_country','restaurant_name','email','telephone','twitter_account','bio','price_range','cuisines','opening_days','smoking_allowed','provide_ordering','website','rating');
+                $aParams = array('username','id_restaurant','id_country','restaurant_name','email','logo','telephone','twitter_account','bio','price_range','cuisines','opening_days','smoking_allowed','provide_ordering','website','rating');
                 $aUserData = DB::table('restaurants')->where(array('username'=>$sUsername))->get($aParams);
                 if(empty($aUserData)) {
                     /*
@@ -152,6 +152,58 @@ class HomeController extends controller
         public function login(){
             return view("pages.login");
         }
+        public function search(){
+            $aRequest = \Request::all();
+            $q = $aRequest['searchTerm'];
+
+            $searchTerms = explode(' ', $q);
+            $aRestaurantsParams = array("restaurant_name","username","logo","email","telephone","id_restaurant","rating","price_range","id_country");
+            $query = DB::table('restaurants');
+            $aSearchTerms = array();
+            foreach($searchTerms as $term)
+            {
+                $aSearchTerms[]=ucfirst($term);
+                $aSearchTerms[]=strtolower($term);
+                $aSearchTerms[]=ucfirst(strtolower($term));
+            }
+            /*
+             * The Search Method will search in as many tables as possible to get a nearly close
+             * list of restaurants the customer want.
+             */
+            foreach($aSearchTerms as $term){
+                $query ->where('restaurant_name', 'LIKE', '%'. $term .'%')
+                    ->orWhere('username','LIKE','%'. $term .'%')
+                    ->orWhere('bio','LIKE','%'. $term .'%')
+                    ->orWhere('cuisines','LIKE','%'. $term .'%');
+            }
+
+            $FinalResults['restaurants'] = $query->get($aRestaurantsParams);
+
+            $query = DB::table('food');
+
+            foreach($aSearchTerms as $term){
+                $query ->where('name', 'LIKE', '%'. $term .'%')
+                       ->orWhere("type", 'LIKE', '%'. $term .'%')
+                       ->orWhere("description", 'LIKE', '%'. $term .'%');
+            }
+            $aRestaurants =  $query->get(array("id_restaurant"));
+            foreach($aRestaurants as $oRestaurant){
+                $aRestaurantsIds[]= $oRestaurant->id_restaurant;
+            }
+
+            if(!empty($aRestaurantsIds)){
+                $aRestaurants = DB::table("restaurants")->whereIn("id_restaurant",$aRestaurantsIds)
+                    ->get($aRestaurantsParams);
+               // dd($aRestaurants);
+                if(!empty($aRestaurants)){
+                    $FinalResults['restaurants']= array_merge($FinalResults['restaurants'],$aRestaurants);
+                }
+            }
+
+            echo json_encode($FinalResults['restaurants']);
+         //   echo json_encode($FinalResults);
+        }
+
         public function logout(){
             \Session::flush();
             return redirect()->intended('/');

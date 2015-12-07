@@ -10,14 +10,16 @@
 <div class="col-lg-6 add-menu">
         <div class="row">
             <div class="add-menu-title">
-                @if($data['page_type']=='offer')
-                    <h3>Make a New Offer</h3>
-                @elseif($data['page_type']=='menu')
-                    <h3>Make a New Menu</h3>
+                @if(isset($data['page_type']))
+                    @if($data['page_type']=='offer')
+                        <h3>Make a New Offer</h3>
+                    @elseif($data['page_type']=='menu')
+                        <h3>Make a New Menu</h3>
+                    @endif
                 @endif
             </div>
         </div>
-    @if($data['page_type']=='menu')
+    @if(isset($data['page_type']) && $data['page_type']=='menu')
         <form method="post" action="backend/addNewMenu" enctype="multipart/form-data" name="newMenuForm" id="add-new-menu">
     @else
         <form method="post" action="backend/addNewOffer" enctype="multipart/form-data" name="newMenuForm" id="add-new-menu">
@@ -65,7 +67,7 @@
             <div class="col-xs-4" style="text-align: center">
                 @if($data['page_type']=='menu')
                  <p>Menu Items</p>
-                @else
+                @elseif($data['page_type']=='offer')
                  <p>Offer Items</p>
                 @endif
             </div>
@@ -73,9 +75,13 @@
         <div class="row">
             <div class="col-xs-4">
                 <select id="my-select" class="js-multiselect form-control" size="8" multiple="multiple">
+                    @if(isset($items))
                     @foreach($items as $item)
                         <option value="{{$item->id_item}}">{{$item->name}}</option>
                     @endforeach
+                        @else
+                        <option value="0">There's no Items</option>
+                    @endif
                 </select>
             </div>
             <div class="col-xs-4">
@@ -88,7 +94,7 @@
                 <select name="food[]" id="js_multiselect_to_1" class="form-control" size="8" multiple="multiple"></select>
             </div>
         </div>
-        @if($data['page_type']!='menu')
+        @if(isset($data['page_type']) && $data['page_type']=='offer')
             <div class="row">
                 <div class="col-xs-6"><p>Total Price:</p></div>
                 <div class="col-xs-3"><input type="text" name="offer_price" class="form-control"/></div>
@@ -96,7 +102,11 @@
         @endif
         <div class="row">
             <div class="col-xs-12">
-                <button type="submit" id="menu-submit-button" class="form-control">Create Menu</button>
+                @if(isset($data['page_type']) && $data['page_type']=='offer')
+                    <button type="submit" id="menu-submit-button" class="form-control">Create Offer</button>
+                @elseif($data['page_type']=='menu')
+                    <button type="submit" id="menu-submit-button" class="form-control">Create Offer</button>
+                @endif
             </div>
         </div>
     </form>

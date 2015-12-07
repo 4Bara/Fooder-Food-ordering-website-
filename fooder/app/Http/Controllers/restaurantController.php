@@ -151,7 +151,6 @@ class restaurantController extends controller
 
         $aData = array('page_type'=>'menu');
         $aItems = DB::table('food')->whereIn('id_item',$aItemsIds)->get(array('*'));
-
         return view('/pages.menu')->with(array('data'=>$aData,'restaurant'=>$oRestaurant,'menu'=>$oMenu,'items'=>$aItems));
     }
     /*

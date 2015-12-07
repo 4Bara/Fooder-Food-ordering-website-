@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html>
 <head>
     @include('includes.head')
@@ -10,7 +10,7 @@
          @include('includes.header')
         </div>
         <div class="main">
-            @yield('content')
+         @yield('content')
         </div>
     </div>
     <div class="row">
