@@ -17,9 +17,10 @@ class LoginController extends controller
       $aRequest = \Input::all();
       $sUsername = $aRequest['username'];
       $sPassword = $aRequest['password'];
+
+
        //Check if there's a user with this name, if yes, get all needed information for them
        $aResult = DB::table('users')->where(array('username'=>$sUsername))->get(array('*'));
-
        if(!empty($aResult)) {
            //If execution reached here then the user is normal user.
            $sUserType = 'user';
@@ -28,24 +29,24 @@ class LoginController extends controller
            //Check if the user is a restaurant
            $aResult= DB::table('restaurants')->where(array('username'=>$sUsername))->get(array('*'));
            $sUserType = 'restaurant';
-           \Session::put('loggedin','true');
-           \Session::put('username',$sUsername);
-           \Session::put('id_user',$aResult[0]->id_restaurant);
-           \Session::put('user_type',$sUserType);
-           //PUT THE SESSION FOR THE RESTAURANT
-           return redirect()->intended('/');
        }
        if(empty($aResult)){
            return redirect('login')->withErrors('User not found!');
        }
+
         if(Hash::check($sPassword,$aResult[0]->password)){
             \Session::put('loggedin','true');
             \Session::put('username',$sUsername);
-            \Session::put('id_user',$aResult[0]->id_user);
             \Session::put('user_type',$sUserType);
+
+            if($sUserType=='user')
+                \Session::put('id_user',$aResult[0]->id_user);
+            elseif($sUserType == 'restaurant'){
+                \Session::put('id_user',$aResult[0]->id_restaurant);
+            }
             return redirect()->intended('/');
         }else{
-            return redirect('login')->withErrors(['Password is wrong!!','Error']);
+            return redirect('login')->withErrors(['Please check your credentials!!','Error']);
         }
    }
 }

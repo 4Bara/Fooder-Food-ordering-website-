@@ -22,7 +22,7 @@ class HomeController extends controller
                 $bLoggedin =    'yes';
                 $sUsername =    \Session::get('username');
                 $dIdUser   =    \Session::get('id_user');
-                $sUserType = \Session::get('user_type');
+                $sUserType =    \Session::get('user_type');
             }else{
                 $bLoggedin='no';
             }
@@ -80,8 +80,8 @@ class HomeController extends controller
             if($bLoggedIn == 'true'){
                 $bLoggedIn = 'yes';
                 $dVisitorId= \Session::get('id_user');
-                $sUser = \Session::get('username');
-
+                $sUser =     \Session::get('username');
+                $sUserType=  \Session::get('user_type');
                 /*
                  * Check if this page is for the logged in uesr
                  * to show him more options.
@@ -91,6 +91,7 @@ class HomeController extends controller
                 }
             }else{
                 $bLoggedIn ='no';
+                $sUserType = "visitor";
             }
 
             /*
@@ -99,6 +100,7 @@ class HomeController extends controller
             $data= array(
                 'logged'=>$bLoggedIn,
                 'profileOwner'=>$bProfileOwner,
+                'user_type'=>$sUserType,
             );
 
             /*
@@ -132,11 +134,9 @@ class HomeController extends controller
                      */
                     return redirect()->intended('/');
                 }
-               // dd($aUserData);
                // foreach($aParams as $sParam) {
                     $oRestarant = $aUserData[0];
                // }
-                //dd($oRestarant);
                 //username is for a restaurant, Redirect it to the restaurant's page.
                 return view('pages.restaurantpage')->with(array('data'=>$data,'restaurant'=>$oRestarant));
             }

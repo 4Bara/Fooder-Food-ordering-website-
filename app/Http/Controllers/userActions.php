@@ -31,5 +31,4 @@ class userActions extends controller
                 'relationship_status'=>'following')
             );
     }
-
 }

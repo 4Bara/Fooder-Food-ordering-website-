@@ -6,18 +6,16 @@
  * Time: 3:31 AM
  */
 namespace App\Http\Controllers;
-
-
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
 
 use DB;
 use Illuminate\View\View;
+use Symfony\Component\Console\Helper\Table;
 
 class restaurantController extends controller
 {
-
     public function addNewItemPage(){
       $aSession= \Session::all();;
 
@@ -27,7 +25,6 @@ class restaurantController extends controller
 
        return view('pages.addItemPage');
     }
-
     public function addNewItem(){
         $aSession = \Session::all();
         $aRequest = Request::all();
@@ -49,7 +46,6 @@ class restaurantController extends controller
             'spicy'=>'n',
             'healthy'=>'n',
             );
-
         //Here i am going to handle the required params of table
         foreach($aItemParams as $sParam => $sCond){
             if($sCond=='r'){
@@ -73,9 +69,7 @@ class restaurantController extends controller
         } else{
             return view('/pages.addItemPage')->withErrors("Something is wrong, we are sorry ! :( ");
         }
-
     }
-
     //This function will redirect the user to the page of offers, remember to include the variable that will be used
     //in destingush between menus and offers pages ! :D
     public function showOffers($username){
@@ -134,7 +128,6 @@ class restaurantController extends controller
 
         return view('/pages.menu')->with(array('data'=>$aData,'restaurant'=>$oRestaurant,'offer'=>$oOffer,'items'=>$aItems));
     }
-
     public function showMenu(){
         $aRequest = \Request::all();
         if(!isset($aRequest['id'])){
@@ -156,7 +149,7 @@ class restaurantController extends controller
         return view('/pages.menu')->with(array('data'=>$aData,'restaurant'=>$oRestaurant,'menu'=>$oMenu,'items'=>$aItems));
     }
     /*
-     * This function should perfom the addition of a new menu for the logged in restaurant.
+     * This function should perform the addition of a new menu for the logged in restaurant.
      */
     public function addNewMenu(){
         $aSession = \Session::all();
@@ -169,16 +162,18 @@ class restaurantController extends controller
         );
         return view('/pages.addNewMenu')->with(array('data'=>$aData,'items'=>$aItemsList));
     }
-
+        /*
+         * This function will take the request and save it into the
+         * menus table in the database.
+         */
     public function newMenu(){
         $aRequest = \Request::all();
         $aSession= $this->validateUser(\Session::all());
         $aMenu['name']=$aRequest['name'];
-        //dd($aRequest);
+
         if(isset($aRequest['cover_picture'])){
         $aMenu['picture']=$this->uploadImage($aRequest['cover_picture'],'cover_picture');
         }
-
         $aMenu['description']=$aRequest['description'];
         $aMenu['id_restaurant']=$aSession['id_user'];
         $aMenu['id_creator']=1;
@@ -189,7 +184,10 @@ class restaurantController extends controller
         DB::table('menu_items')->insert(array('id_menu'=>$dIdMenu,'items'=>$sFoodList));
             return redirect('/p/'.$aSession['username']);
     }
-
+    /*
+     * This function will add the offer the offer's table
+     * in the database
+     */
     public function newOffer(){
         $aRequest = \Request::all();
         $aSession= $this->validateUser(\Session::all());
@@ -211,7 +209,11 @@ class restaurantController extends controller
         DB::table('offer_items')->insert(array('id_offer'=>$dIdOffer,'items'=>$sFoodList));
         return redirect('/p/'.$aSession['username']);
     }
-
+    /*
+     * This is the controller function
+     * that will be used to show the page of add new Offer
+     *
+     */
     public function addNewOffer(){
         $aSession = \Session::all();
         $this->validateUser($aSession);
@@ -223,7 +225,62 @@ class restaurantController extends controller
         );
         return view('/pages.addNewMenu')->with(array('data'=>$aData,'items'=>$aItemsList));
     }
+    /*
+     * This function will direct the user to write review page
+     */
+    public function writeReview($aRequest){
+        $data=array(
+            'username'=>$aRequest
+        );
+        return view('/pages.writeReview')->with(array('data'=>$data));
+    }
 
+    public function submitReview(){
+        $aRequest = \Request::all();
+        $aSession = \Session::all();
+        //GET RESTAURANT USERNAME
+        $aRestaurant = DB::table('restaurants')
+                       ->where(array('username'=>$aRequest['username']))
+                       ->get(array("id_restaurant"));
+        $oRestaurant = $aRestaurant[0];
+        $aReview['id_restaurant']=$oRestaurant->id_restaurant;
+        $aReview['id_user']=$aSession['id_user'];
+        $aReview['body']=$aRequest['review'];
+        $aReview['rating']=$aRequest['rating'];
+        $oImage = $aRequest['review-picture'];
+        $FullImagePath = $this->uploadImage($oImage, 'review-picture');
+        $aReview['review_image'] = $FullImagePath;
+        $aReview['date_created']=Date('Y-m-d h:i:s');
+        DB::table('reviews')->insert($aReview);
+        return redirect('/p/'.$aRequest['username']);
+    }
+
+    public function showReviews(){
+       // dd(\Request::all());
+        $aRequest = \Request::all();
+        $oRestaurant = DB::table('restaurants')->where(array('username'=>$aRequest['username']))->get(array('id_restaurant'))[0];
+        $aReviewsList =  DB::table('reviews')->where(array('id_restaurant'=>$oRestaurant->id_restaurant))->get(array('*'));
+        $aReviews = array();
+        $aTempReview = array();
+        foreach($aReviewsList as $oReview){
+            $oUser = DB::table('users')->where(array('id_user'=>$oReview->id_user))->get(array('username'))[0];
+            $aTempReview['id_review']=$oReview->id_review;
+            $aTempReview['username'] =$oUser->username;
+            $aTempReview['body']  = $oReview->body;
+            $aTempReview['rating']=$oReview->rating;
+            switch($oReview->rating){
+                case 'poor':$aTempReview['rating']=1;break;
+                case 'good':$aTempReview['rating']=2;break;
+                case 'vGood':$aTempReview['rating']=3;break;
+                case 'excellent':$aTempReview['rating']=4;break;
+                case 'extraordinary':$aTempReview['rating']=5;break;
+            }
+            $aTempReview['image']=$oReview->review_image;
+            $aTempReview['date_created']=$oReview->date_created;
+            $aReviews [] = $aTempReview;
+        }
+       return view('/pages.reviews')->with(array('aReviews'=>$aReviews));
+    }
     /*
      * This function will validate if the user can perform this action
      * before anything to be excuted, it will return the session if true, if failed will
@@ -236,22 +293,20 @@ class restaurantController extends controller
         }
         return $aSession;
     }
-
-    //This function will get an image as a parameter and upload it to the directory then return the directory or if failed it will return false
+    /*
+     * This function will get an image as a parameter and upload
+     * it to the directory then return the directory or if failed
+     * it will return false
+     */
     private function uploadImage($oImage,$sfile){
         $sDestination=  'images/photos/';
-        //$sName =$oImage->getClientOriginalName();
-       // dd($sDestination);
         $sDate=date('YmdHis');
         if(Request::file($sfile)->move($sDestination, $sDate.$oImage->getClientOriginalName())){
             //Asset will give you the directory of public folders, that will be used in saving photos to it!
-          //  dd(asset($oImage->getClientOriginalName()));
             return asset($sDestination.$sDate.$oImage->getClientOriginalName());
         }
         else {
             return false;
         }
     }
-
-
 }

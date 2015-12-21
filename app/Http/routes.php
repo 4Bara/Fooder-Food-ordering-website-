@@ -55,7 +55,12 @@ Route::get('p/{username}/menus/{data?}','restaurantController@showMenus');
 //Add Menu to DB
 Route::post('p/{username}/backend/addNewMenu','restaurantController@newMenu');
 
-
+/*
+ * Write a review
+ */
+Route::get('p/{username}/writeReview/{data?}','restaurantController@writeReview');
+Route::post('p/{username}/writeReview/backend/submitReview','restaurantController@submitReview');
+Route::get('/p/{username}/reviews/{data?}','restaurantController@showReviews');
 /*
  * Restauarnats Menus / Offers pages routings
  */

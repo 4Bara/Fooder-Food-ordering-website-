@@ -105,7 +105,7 @@
                 @if(isset($data['page_type']) && $data['page_type']=='offer')
                     <button type="submit" id="menu-submit-button" class="form-control">Create Offer</button>
                 @elseif($data['page_type']=='menu')
-                    <button type="submit" id="menu-submit-button" class="form-control">Create Offer</button>
+                    <button type="submit" id="menu-submit-button" class="form-control">Create Menu</button>
                 @endif
             </div>
         </div>

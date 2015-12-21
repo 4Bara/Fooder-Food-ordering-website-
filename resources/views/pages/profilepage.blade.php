@@ -7,7 +7,6 @@
     @if(isset($data['visitor_id']))
     <input type="hidden" id="visitor_id" value="{{$data['visitor_id']}}"/>
     @endif
-
     <div class="col-md-3" id="left-side">
         <img id="profile-picture" src="https://fbcdn-sphotos-e-a.akamaihd.net/hphotos-ak-xaf1/v/t1.0-9/10628249_10152393424262462_9177899944359276523_n.jpg?oh=e1ecf09dcc256fae98f9b0457b007a35&oe=56B16FDE&__gda__=1458004842_9780c4fe105b588eecc6e094fe9044d6"/>
         <div id="user-info-box">
