@@ -9,10 +9,7 @@
 | It's a breeze. Simply tell Laravel the URIs it should respond to
 | and give it the controller to call when that URI is requested.
 |
-*/
-/*
- * Home Controller Routing
- */
+/*Home Controller*/
 Route::get('/','HomeController@index');
 Route::get('p/{username}','HomeController@profile');
 Route::get('login','HomeController@login');
@@ -67,3 +64,17 @@ Route::get('/p/{username}/reviews/{data?}','restaurantController@showReviews');
 
 Route::get('menu/{data?}','restaurantController@showMenu');
 Route::get('offer/{data?}','restaurantController@showOffer');
+
+/*
+ * Cart Logic
+ */
+Route::post('addToCart','CartController@addToCart');
+Route::get('showCart','CartController@showCart');
+Route::post('checkout','CartController@checkout');
+
+/*
+ * Orders Logic
+ */
+Route::get('showOrders','userActions@showOrders');
+Route::get('showRestaurantsOrders','userActions@showRestaurantsOrders');
+Route::post('updateOrderStatus','userActions@updateOrderStatus');

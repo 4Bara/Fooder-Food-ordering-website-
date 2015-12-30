@@ -1,5 +1,10 @@
 @extends('layouts.default')
 @section('style')
+    <style>
+        .menu-box #menu-cover{
+           height:250px;
+        }
+    </style>
 @stop
 @section('content')
     <div  class="col-lg-12 menus">
@@ -19,16 +24,20 @@
                 @foreach($menus as $menu)
                 <div class="col-md-6">
                     <div class="menu-box">
-                        @if(isset($menu->id_menu))
-                            <a href="{{asset('/menu?id='.$menu->id_menu)}}">
-                        @elseif(isset($menu->id_offer))
-                            <a href="{{asset('/offer?id='.$menu->id_offer)}}">
-                        @endif
-                        <img id="menu-cover" src="{{$menu->picture}}" />
-                        <p id="menu-title">{{$menu->name}}</p>
-                        <p id="menu-description">
-                           {{$menu->description}}
-                        </p>
+                        <div class="row">
+                            @if(isset($menu->id_menu))
+                                <a href="{{asset('/menu?id='.$menu->id_menu)}}">
+                            @elseif(isset($menu->id_offer))
+                                <a href="{{asset('/offer?id='.$menu->id_offer)}}">
+                            @endif
+                            <img id="menu-cover" src="{{$menu->picture}}" />
+                        </div>
+                        <div class="row">
+                            <p id="menu-title">{{$menu->name}}</p>
+                        </div>
+                        <div class="row">
+                            <p id="menu-description">{{$menu->description}}</p>
+                        </div>
                         </a>
                     </div>
                 </div>

@@ -18,7 +18,6 @@ class LoginController extends controller
       $sUsername = $aRequest['username'];
       $sPassword = $aRequest['password'];
 
-
        //Check if there's a user with this name, if yes, get all needed information for them
        $aResult = DB::table('users')->where(array('username'=>$sUsername))->get(array('*'));
        if(!empty($aResult)) {
@@ -39,12 +38,15 @@ class LoginController extends controller
             \Session::put('username',$sUsername);
             \Session::put('user_type',$sUserType);
 
-            if($sUserType=='user')
-                \Session::put('id_user',$aResult[0]->id_user);
-            elseif($sUserType == 'restaurant'){
+            if($sUserType=='user') {
+                //add empty array of items
+                \Session::put('cart', array('items'=>array()));
+                \Session::put('id_user', $aResult[0]->id_user);
+            } else if($sUserType == 'restaurant'){
                 \Session::put('id_user',$aResult[0]->id_restaurant);
             }
-            return redirect()->intended('/');
+            $data=Backend::LoginData();
+            return redirect()->intended('/')->with(array('data'=>$data));
         }else{
             return redirect('login')->withErrors(['Please check your credentials!!','Error']);
         }

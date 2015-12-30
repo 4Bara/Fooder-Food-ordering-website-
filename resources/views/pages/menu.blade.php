@@ -1,6 +1,12 @@
 @extends('layouts.default')
 @section('style')
     <script src="{{asset("../public/javascript/offers.js")}}" ></script>
+    <style>
+        .information{
+            display:none;
+            visibility: hidden;
+        }
+    </style>
 @stop
 @section('content')
 <div class="col-lg-12 menu-page-container">
@@ -53,33 +59,52 @@
             <div class="col-xs-1">
                 <div class="item-healthy">
                     <h3>Healthy</h3>
-                    <p>{{$item->healthy}}</p>
+                    @if($item->healthy)
+                        <p>YES</p>
+                    @else
+                        <p>NO</p>
+                    @endif
                 </div>
             </div>
+            <div class="item-spicy">
             <div class="col-xs-1">
-                <div class="item-spicy">
                     <h3>spicy</h3>
-                    <p>{{$item->spicy}}</p>
+                    @if($item->spicy == "yes")
+                        <select class="spicy">
+                            <option value="yes">YES</option>
+                            <option value="no">NO</option>
+                        </select>
+                    @else
+                        <select class="spicy" disabled="disabled">
+                            <option value="no" selected>NO</option>
+                        </select>
+                    @endif
                 </div>
             </div>
+            @if($data['page_type']=='menu')
             <div class="col-xs-1">
                 <div class="item-spicy">
                     <h3>Price</h3>
-                    <p>{{$item->price}}</p>
+                    <p>{{$item->price}}$</p>
                 </div>
             </div>
-            <div class="col-xs-1">
+            @endif
+            @if($data['showUnits'])
                 <div class="item-count">
-                    <h3>Units</h3>
+                    <div class="col-xs-1">
+                        <h3>Units</h3>
                         <input id="item_qty" class='spinner' style="width:20px" name="item_qty">
+                    </div>
                 </div>
-            </div>
-            <div class="col-xs-1">
-                <div class="add-to-cart">
+                <div id="add-to-cart">
                     <h3>(+)</h3>
-                    <input type="button" name="add_item_to_cart" id="add-to-cart" value="Add">
+                    <input type="button" name="add_item_to_cart" class="add-to-cart" value="Add">
                 </div>
-            </div>
+                <div class="information" style="">
+                    <input id="id_item" value="{{$item->id_item}}" />
+                    <input id="id_restaurant" value="{{$item->id_restaurant}}"/>
+                </div>
+            @endif
         </div>
         @endforeach
         </div>

@@ -16,7 +16,7 @@ class CartController extends Controller{
     public function addToCart(){
         $aRequest = \Request::all();
         \Session::push("cart.items",$aRequest);
-        print_r(\Session::all());
+       // print_r(\Session::all());
     }
     public function showCart(){
         $aSession = \Session::all();
@@ -36,7 +36,8 @@ class CartController extends Controller{
         $aCartData['tax']=.16;
         $aCartData['total_price_with_out_tax']=$cartTotalPrice;
         $aCartData['total_price_with_tax']=$cartTotalPrice*$aCartData['tax']+$cartTotalPrice;
-        return view("pages.cartPage")->with(array('cartData'=>$aCartData));
+        $aData = Backend::LoginData();
+        return view("pages.cartPage")->with(array('cartData'=>$aCartData,'data'=>$aData));
     }
     /*
      * This function will be used when a user want to checkout his/her cart,

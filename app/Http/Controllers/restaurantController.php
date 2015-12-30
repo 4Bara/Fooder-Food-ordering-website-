@@ -95,6 +95,8 @@ class restaurantController extends controller
         if(empty($aRestaurantData)){
             //Go the previous page
         }
+        $data = Backend::LoginData();
+        $data['page_type']='menu';
         $dIdRestaurant = $aRestaurantData[0]->id_restaurant;
       //  dd($dIdRestaurant);
         $aMenus = DB::table('menus')->
@@ -105,7 +107,7 @@ class restaurantController extends controller
         //dd($aMenus);
         //dd(\Request::all());
        // dd($aMenus);
-        return view('/pages.menusList')->with(array('menus'=>$aMenus));
+        return view('/pages.menusList')->with(array('menus'=>$aMenus,'data'=>$data));
     }
     public function showOffer(){
         $aRequest = \Request::all();
@@ -114,6 +116,7 @@ class restaurantController extends controller
         }
         $aOffer = DB::table('offers')->where(array('id_offer'=>$aRequest['id']))->get(array('*'));
         $oOffer = $aOffer[0];
+
         $aRestaurant = DB::table('restaurants')->where(array('id_restaurant'=>$oOffer->id_restaurant))->get(array('restaurant_name'));
         $oRestaurant= $aRestaurant[0];
 
@@ -124,12 +127,19 @@ class restaurantController extends controller
         }
 
         $aData = array('page_type'=>'offer');
+        $aSession = \Session::all();
+        if($aSession['user_type']=='restaurant'){
+            $aData['showUnits'] = false;
+        }else{
+            $aData['showUnits'] = true;
+        }
         $aItems = DB::table('food')->whereIn('id_item',$aItemsIds)->get(array('*'));
-
+        //dd($aItems);
         return view('/pages.menu')->with(array('data'=>$aData,'restaurant'=>$oRestaurant,'offer'=>$oOffer,'items'=>$aItems));
     }
     public function showMenu(){
         $aRequest = \Request::all();
+        $data = Backend::LoginData();
         if(!isset($aRequest['id'])){
             return redirect('/');
         }
@@ -142,11 +152,23 @@ class restaurantController extends controller
         foreach($aMenuItems as $oMenuItem){
             $aItemsIds = json_decode($oMenuItem->items);
         }
+        if(empty($aItemsIds)){
+            $aItemsIds=array();
+        }
 
-        $aData = array('page_type'=>'menu');
+        $data['page_type']='menu';
+        /*
+         * This will show units and addition featuer only for persons users.
+         */
+        if( isset($data['user_type']) && $data['user_type']=='restaurant'){
+            $data['showUnits'] = false;
+            $data['user_type']='restaurant';
+        }else{
+            $data['showUnits'] = true;
+            $data['user_type']='user';
+        }
         $aItems = DB::table('food')->whereIn('id_item',$aItemsIds)->get(array('*'));
-
-        return view('/pages.menu')->with(array('data'=>$aData,'restaurant'=>$oRestaurant,'menu'=>$oMenu,'items'=>$aItems));
+        return view('/pages.menu')->with(array('data'=>$data,'restaurant'=>$oRestaurant,'menu'=>$oMenu,'items'=>$aItems));
     }
     /*
      * This function should perform the addition of a new menu for the logged in restaurant.
@@ -155,11 +177,8 @@ class restaurantController extends controller
         $aSession = \Session::all();
         $this->validateUser($aSession);
         $aItemsList = DB::table('food')->where(array('id_restaurant'=>$aSession['id_user']))->get(array("*"));
-        $aData = array(
-            'user_type'=>$aSession['user_type'],
-            'id_user'=>$aSession['id_user'],
-            'page_type'=>'menu',
-        );
+        $data = Backend::LoginData();
+        $data['page_type']='menu';
         return view('/pages.addNewMenu')->with(array('data'=>$aData,'items'=>$aItemsList));
     }
         /*
@@ -170,7 +189,6 @@ class restaurantController extends controller
         $aRequest = \Request::all();
         $aSession= $this->validateUser(\Session::all());
         $aMenu['name']=$aRequest['name'];
-
         if(isset($aRequest['cover_picture'])){
         $aMenu['picture']=$this->uploadImage($aRequest['cover_picture'],'cover_picture');
         }
@@ -181,7 +199,9 @@ class restaurantController extends controller
         $aMenu['status']='active';
         $dIdMenu = DB::table('menus')->insertGetId($aMenu);
         $sFoodList = json_encode($aRequest['food']);
-        DB::table('menu_items')->insert(array('id_menu'=>$dIdMenu,'items'=>$sFoodList));
+
+        $data = Backend::LoginData();
+        DB::table('menu_items')->insert(array('data'=>$data,'id_menu'=>$dIdMenu,'items'=>$sFoodList));
             return redirect('/p/'.$aSession['username']);
     }
     /*
@@ -206,7 +226,8 @@ class restaurantController extends controller
         $dIdOffer = DB::table('offers')->insertGetId($aOffer);
         //Get the Food list and encode them into JSON before saving them into the DB
         $sFoodList = json_encode($aRequest['food']);
-        DB::table('offer_items')->insert(array('id_offer'=>$dIdOffer,'items'=>$sFoodList));
+        $data = Backend::LoginData();
+        DB::table('offer_items')->insert(array('data'=>$data,'id_offer'=>$dIdOffer,'items'=>$sFoodList));
         return redirect('/p/'.$aSession['username']);
     }
     /*
@@ -218,20 +239,16 @@ class restaurantController extends controller
         $aSession = \Session::all();
         $this->validateUser($aSession);
         $aItemsList = DB::table('food')->where(array('id_restaurant'=>$aSession['id_user']))->get(array("*"));
-        $aData = array(
-            'user_type'=>$aSession['user_type'],
-            'id_user'=>$aSession['id_user'],
-            'page_type'=>'offer',
-        );
-        return view('/pages.addNewMenu')->with(array('data'=>$aData,'items'=>$aItemsList));
+        $data = Backend::LoginData();
+        $data['page_type']='offer';
+        return view('/pages.addNewMenu')->with(array('data'=>$data,'items'=>$aItemsList));
     }
     /*
      * This function will direct the user to write review page
      */
     public function writeReview($aRequest){
-        $data=array(
-            'username'=>$aRequest
-        );
+        $data = Backend::LoginData();
+        $data['username']=$aRequest;
         return view('/pages.writeReview')->with(array('data'=>$data));
     }
 
@@ -279,7 +296,8 @@ class restaurantController extends controller
             $aTempReview['date_created']=$oReview->date_created;
             $aReviews [] = $aTempReview;
         }
-       return view('/pages.reviews')->with(array('aReviews'=>$aReviews));
+        $data = Backend::LoginData();
+       return view('/pages.reviews')->with(array('data'=>$data,'aReviews'=>$aReviews));
     }
     /*
      * This function will validate if the user can perform this action

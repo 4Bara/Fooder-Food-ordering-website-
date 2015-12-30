@@ -21,39 +21,39 @@ class RegisterationController extends controller
      *$aUserParams       @array contains values of the variables of each user
      *$aRestaurantParams @array contains values of the variables of each Restaurant
      */
-    private $aUserParams=['username','password','first_name','last_name','email','id_country','age','gender','user_mobile','user_bio','user_type','user_status'];
+    private $aUserParams=['username','password','first_name','last_name','email','logo','id_country','date_of_birth','gender','telephone','user_bio','user_type','user_status'];
     private $aRestaurantParams=['username','password','restaurant_name','location','logo','email','telephone','id_country','bio',
                                 'cuisines',"date_registered",'opening_days','opening_hours','somking_allowed','provide_ordering','website','price_range',
                                 'twitter_account'];
 
     public function newAccount(){
-
         $aRequest = \Input::all();
-
         //check if there is an account with the same username there
         $aTables = array('users','restaurants');
-
+        //dd($aRequest);
         //Loop through out the tables and check the values of usernames or emails to make sure no redundunt usersnames or emails used.
         foreach($aTables as $sTable) {
-            $oUser = DB::table($sTable)->where('username', '=', strtolower($aRequest['username']))->get();
-            if (!empty($oUser)) {
-                echo "username is used, choose another one.";
-                return;
-            }
+            try {
+                $oUser = DB::table($sTable)->where('username', '=', strtolower($aRequest['username']))->get();
 
+                if (!empty($oUser)) {
+                    echo "username is used, choose another one.";
+                    return;
+                }
+            } catch(Exception $e){
+            }
             $oUser = DB::table($sTable)->where('email', '=', strtolower($aRequest['email']))->get();
             if (!empty($oUser)) {
                 echo "Email is used, choose another one.";
                 return;
             }
         }
-
         //Check user type if person send it to person registeration function, if not send it to resturant's
-        if($aRequest['user_kind']=='person') {
-           $aRequest['user_type']=$aRequest['user_kind'];
+        if($aRequest['person']==1) {
+           $aRequest['user_type']='person';
            $aRequest['user_status']='active';
            $this->addNormalUser($aRequest);
-        }else if($aRequest['user_kind']=='restaurant') {
+        }else if($aRequest['restaurant']==1) {
             //dd($aRequest);
             $this->addRestaurantUser($aRequest);
         }
@@ -69,7 +69,7 @@ class RegisterationController extends controller
                     $aUser[$sParam] = strtolower($aRequest[$sParam]);
                     break;
                 case "logo":
-                    $aUser[$sParam] = Actions::uploadPhotos($aRequest['logo'], 'logo');
+                    $aUser['photo'] = Backend::uploadPhotos($aRequest['logo'], 'logo');
                     break;
                 default:
                     $aUser[$sParam] = $aRequest[$sParam];
@@ -79,6 +79,10 @@ class RegisterationController extends controller
 
         $aUser['date_registered']=date('Y-m-d h:i:s');
         $aUser['age']=$aRequest['date_of_birth'];
+        $aUser['user_mobile']=$aRequest['telephone'];
+        $aUser['user_status']='active';
+        unset($aUser['date_of_birth']);
+        unset($aUser['telephone']);
         //Hashing the password to be saved encrypted
         $aUser['password']= Hash::make($aUser['password']);
 

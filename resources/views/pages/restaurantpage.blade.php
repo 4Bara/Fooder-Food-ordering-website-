@@ -1,6 +1,5 @@
 @extends('layouts.default')
 @section('style')
-    <script src="{{asset("../public/javascript/restaurant.js")}}" ></script>
     <style>
         #restuarnat-page-logo{
             width:120px;
@@ -88,7 +87,11 @@
         }
     </style>
 @stop
+@section('script')
+    <script src="{{asset("../public/javascript/restaurant.js")}}" ></script>
+@stop
 @section('content')
+    <div class="container">
     <div class="restaurant-left col-md-4">
        <div class="row">
            <div class="col-xs-4">
@@ -225,5 +228,6 @@
                 <img src="http://www.houstonlocal.news/wp-content/uploads/2015/09/bjs-free-pizookie-600p.jpg"/>
             </div>
         </div>
+    </div>
     </div>
 @stop

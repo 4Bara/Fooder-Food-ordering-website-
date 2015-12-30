@@ -1,7 +1,35 @@
 html,body{
     padding-top:0;
     margin:0;
+    background-color: #f9f9f9;
 }
+.white-box{
+    background-color: white;
+    box-shadow: 1px 1px 1px 1px rgba(0.09,0,0,0);
+    border:1px solid #CCCCCC;
+    border-radius: 3px;
+    padding:20px;
+    display:table;
+    margin:0px auto;
+    min-width: 50%;
+    min-height: 200px;
+}
+.btn-upload{
+    position: relative;
+    margin-top: 37px;
+}
+.btn-upload input{
+    position: absolute;
+    width:120%;
+    height:120%;
+    top:-5px;
+    left:-5px;
+    opacity: 0;
+}
+.m-b-30{
+    margin-bottom:30px;
+}
+.m-t-30{margin-top: 30px;}
 #main_logo a{
     font-size:55pt;
     color:black;
@@ -13,11 +41,40 @@ html,body{
     color:black;
     text-decoration: none;
 }
-.navbar{
-    background-color:#e8e8dc;
+.slidehome{
+    height: 300px;
+    background-color: #0088ff;
 }
-
-
+.centerup{
+    position: absolute;
+    left: 38%;
+    top:90px ;
+    z-index: 30;
+}
+.w-300{
+ width: 350px;
+}
+.inline{
+    display: inline-block;
+}
+.btn-search{
+    border-radius: 0;
+    margin-left: -10px;
+    margin-top: -3px;
+    z-index: 10;
+}
+.main{
+    margin-top: 51px;
+}
+.pages{
+    margin-top: 85px;
+}
+.navbar-nav>li>a.cart{
+    background-color: #9A0000;
+    border-radius: 50px;
+    padding: 10px 8px;
+    margin-top: 4px;
+}
 #nav_bar_right {
     text-align: right;
 }
@@ -50,13 +107,8 @@ html,body{
     width: 65px;
 }
 /*Main Page CSS*/
-.footer {
-    position:fixed;
-    left:0px;
-    bottom:0px;
-    height:30px;
-    width:100%;
-    text-align: center;
+footer {
+    margin-top: 50px;
 }
 .search-result{
     border:2px solid black;
@@ -185,23 +237,12 @@ html,body{
 
 
 /* Registeration Page */
-.title-row{
-    text-align: center;
-    font-size:30pt;
-}
+
 .row .radios{
     text-align: center;
 }
-#person{
-    margin-top:8px;
-}
-#registeration_page_content{
-    border-radius: 25px;
-    background-color:#e8e8dc;
-    color:black;
-    text-align: left;
-    margin-bottom:30px;;
-}
+
+
 #registeration_page_content label{
     /*width:40%;*/
     /*display:inline-block;*/
@@ -409,7 +450,6 @@ text-align: center;
 .pagination{
     border:1px solid black;
     font-size:15pt;
-
 }
 
 /*

@@ -5,16 +5,10 @@
     @yield('style')
 </head>
 <body>
-    <div class="container-fluid">
-        <div class="navbar">
-         @include('includes.header')
+        @include('includes.header')
+        <div class="@if(Route::getCurrentRoute()->getActionName()=='App\Http\Controllers\HomeController@index') main @else pages @endif">
+            @yield('content')
         </div>
-        <div class="main">
-         @yield('content')
-        </div>
-    </div>
-    <div class="row">
         @include('includes.footer')
-    </div>
 </body>
 </html>

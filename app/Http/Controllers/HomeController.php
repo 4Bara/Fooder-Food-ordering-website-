@@ -14,31 +14,18 @@ use Illuminate\Support\Facades\Session;
 class HomeController extends controller
 {
         public function index(){
-            $bLoggedin = \Session::get('loggedin');
+            $data = Backend::LoginData();
             /*
              * If user is logged in then add session's values
              */
-            if($bLoggedin  ==   'true'){
-                $bLoggedin =    'yes';
-                $sUsername =    \Session::get('username');
-                $dIdUser   =    \Session::get('id_user');
-                $sUserType =    \Session::get('user_type');
-            }else{
-                $bLoggedin='no';
-            }
-            $data=array(
-            'logged'=>$bLoggedin,
-            'date'=>date('Y-m-d')
-            );
-            if($bLoggedin == 'yes'){
-                $data['username']=$sUsername;
-                $data['id_user']=$dIdUser;
-                $data['user_type']=$sUserType;
-            }
             return view('pages.mainpage')->with("data",$data);
         }
         public function registration()
         {
+            if(Backend::validateUser()){
+                $aData = Backend::LoginData();
+                return redirect('/')->with(array('data'=>$aData));
+            }
             /*
              * Collect the data from the tables to be shown on the registration page
              * 1:50 AM 11/17/2015
@@ -69,39 +56,25 @@ class HomeController extends controller
         public function profile($sUsername){
             //Get if the user is logged in or not
             $bLoggedIn = \Session::get("loggedin");
-
+            $data = Backend::LoginData();
             //In default the profile's vistor is not the owner of it.
-            $bProfileOwner = 'no';
+            $data['profileOwner']='no';
+            if(isset($data['logged']) && $data['logged'] == 'yes'){
+                $dVisitorId = $data['id_user'];
+                $sUser  = $data['username'];
 
-            /*
-             * If this variable is empty then the user is not logged in at all.
-             */
-            $dVisitorId='';
-            if($bLoggedIn == 'true'){
-                $bLoggedIn = 'yes';
-                $dVisitorId= \Session::get('id_user');
-                $sUser =     \Session::get('username');
-                $sUserType=  \Session::get('user_type');
                 /*
                  * Check if this page is for the logged in uesr
                  * to show him more options.
                  */
                 if($sUsername == \Session::get('username')){
-                    $bProfileOwner ='yes';
+                    $data['profileOwner']='yes';
                 }
             }else{
-                $bLoggedIn ='no';
-                $sUserType = "visitor";
-            }
+                $data['logged'] ='no';
+                $data['user_type'] = "visitor";
 
-            /*
-             * @data @Array that will contain all data for the logged in user 'or not logged in' ;)
-             */
-            $data= array(
-                'logged'=>$bLoggedIn,
-                'profileOwner'=>$bProfileOwner,
-                'user_type'=>$sUserType,
-            );
+            }
 
             /*
              * Get the username and put it in data
@@ -118,7 +91,7 @@ class HomeController extends controller
             /*
              * Check if the user is a normal user 'Customers'
              */
-            $aUserData = DB::table('users')->where(array('username'=>$sUsername))->get(array("id_user","username","first_name","last_name","email","id_country","gender","age","user_bio","user_mobile","user_status","user_type"));
+            $aUserData = DB::table('users')->where(array('username'=>$sUsername))->get(array("id_user","username","first_name","last_name","email","id_country","gender","age","user_bio","user_mobile","user_status","user_type","photo"));
             if(empty($aUserData)){
                 /*
                  * Being here means that the username is not for a normal user,
@@ -132,7 +105,7 @@ class HomeController extends controller
                      * redirect the viewer to the home directory,
                      * or maybe 'page not(404)found page'
                      */
-                    return redirect()->intended('/');
+                    return redirect()->intended('/')->with(array('data'=>$data));
                 }
                // foreach($aParams as $sParam) {
                     $oRestarant = $aUserData[0];
@@ -147,21 +120,35 @@ class HomeController extends controller
                 $aUser['rating'] = $aUserRating[0]->likes_count;
             }
             $aUser['user']= $aUserData[0];
+
             return view('pages.profilepage')->with(array('data'=>$data,'aUser'=>$aUser));
         }
         public function login(){
+            if(Backend::validateUser()){
+                return redirect('/');
+            }
+
             return view("pages.login");
         }
         public function search(){
             $aRequest = \Request::all();
             $q = $aRequest['searchTerm'];
 
+            //Get the from - to price
+            $aPrice['from']=$aRequest['from_price'];
+            $aPrice['to']=$aRequest['to_price'];
+
             $searchTerms = explode(' ', $q);
+
+            if($searchTerms[0]=="" && !isset($aPrice['from'])){
+                $bNoSearchTerms = false;
+            }else{
+                $bNoSearchTerms = true;
+            }
             $aRestaurantsParams = array("restaurant_name","username","logo","email","telephone","id_restaurant","rating","price_range","id_country");
             $query = DB::table('restaurants');
             $aSearchTerms = array();
-            foreach($searchTerms as $term)
-            {
+            foreach($searchTerms as $term){
                 $aSearchTerms[]=ucfirst($term);
                 $aSearchTerms[]=strtolower($term);
                 $aSearchTerms[]=ucfirst(strtolower($term));
@@ -170,38 +157,55 @@ class HomeController extends controller
              * The Search Method will search in as many tables as possible to get a nearly close
              * list of restaurants the customer want.
              */
-            foreach($aSearchTerms as $term){
-                $query ->where('restaurant_name', 'LIKE', '%'. $term .'%')
-                    ->orWhere('username','LIKE','%'. $term .'%')
-                    ->orWhere('bio','LIKE','%'. $term .'%')
-                    ->orWhere('cuisines','LIKE','%'. $term .'%');
-            }
+            if(!$bNoSearchTerms) {
+                foreach ($aSearchTerms as $term) {
 
-            $FinalResults['restaurants'] = $query->get($aRestaurantsParams);
+                    $query->where('restaurant_name', 'LIKE', '%' . $term . '%')
+                        ->orWhere('username', 'LIKE', '%' . $term . '%')
+                        ->orWhere('bio', 'LIKE', '%' . $term . '%')
+                        ->orWhere('cuisines', 'LIKE', '%' . $term . '%');
+                }
+            $Results['restaurants'] = $query->get($aRestaurantsParams);
+            }
 
             $query = DB::table('food');
-
-            foreach($aSearchTerms as $term){
-                $query ->where('name', 'LIKE', '%'. $term .'%')
-                       ->orWhere("type", 'LIKE', '%'. $term .'%')
-                       ->orWhere("description", 'LIKE', '%'. $term .'%');
+            if(!$bNoSearchTerms) {
+                foreach ($aSearchTerms as $term) {
+                    $query->where('name', 'LIKE', '%' . $term . '%')
+                        ->orWhere("type", 'LIKE', '%' . $term . '%')
+                        ->orWhere("description", 'LIKE', '%' . $term . '%');
+                }
             }
+            if(isset($aPrice['from'])) {
+                $from = $aPrice['from'];
+            }else{
+                $from = 0;
+            }
+
+            if(isset($aPrice['to'])){
+                $to = $aPrice['to'];
+            }else{
+                $to = 1000;
+            }
+            $query->orWhereBetween("price",array($from,$to));
+
             $aRestaurants =  $query->get(array("id_restaurant"));
+            dd($aRestaurants);
             foreach($aRestaurants as $oRestaurant){
                 $aRestaurantsIds[]= $oRestaurant->id_restaurant;
             }
-
             if(!empty($aRestaurantsIds)){
                 $aRestaurants = DB::table("restaurants")->whereIn("id_restaurant",$aRestaurantsIds)
                     ->get($aRestaurantsParams);
                // dd($aRestaurants);
                 if(!empty($aRestaurants)){
-                    $FinalResults['restaurants']= array_merge($FinalResults['restaurants'],$aRestaurants);
+                    $Results['restaurants']= array_merge($Results['restaurants'],$aRestaurants);
                 }
             }
-
-            echo json_encode($FinalResults['restaurants']);
-         //   echo json_encode($FinalResults);
+            foreach($Results['restaurants'] as $result){
+                $FinalResults[$result->id_restaurant]=$result;
+            }
+            echo json_encode($FinalResults);
         }
 
         public function logout(){

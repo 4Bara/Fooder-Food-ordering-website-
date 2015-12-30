@@ -1,44 +1,33 @@
 @extends('layouts.default')
 @section('style')
-  <script src="{{asset("../public/javascript/registeration.js")}}" ></script>
+
+@stop
+@section('script')
+    <script src="{{asset("../public/javascript/registeration.js")}}" ></script>
+    <script src="http://maps.googleapis.com/maps/api/js"></script>
 @stop
 @section('content')
-    <div class="col-md-3">
-    </div>
-    <div id="registeration_page_content" class="col-md-6">
-        <div class="row title-row">
-        <p>Registeration Page</p>
-        </div>
+    <input type="hidden" id="latitude" value="0"/>
+    <input type="hidden" id="longitude" value="0"/>
+    <div id="registeration_page_content" class="white-box">
+            <h1 class="text-center m-b-30" >Registration Page</h1>
         <div id="form-container">
-        <form id="registeration-form" class="form-horizontal"  method="post" enctype="multipart/form-data">
-            <input type="hidden" name="_token" value="{{ Session::getToken() }}">
-            <div class="form-group">
-                <div class="row">
-                    <div class="col-xs-6">
-                    <label id="question-user">What account type you are?</label>
-                    </div>
-                </div>
+            <div class="row">
+                <div class="col-md-12 question">
                     <div class="row">
-                        <div class="radio">
-                            <div class="col-xs-4">
-                             <label class="control-label pull-right">Person</label>
-                            </div>
-                            <div class="col-xs-2">
-                             <input type="radio" id="person" name="user_kind" value="person" checked/>
-                            </div>
-                        </div>
+                        <h3 class="m-b-30">What account type you are?</h3>
                     </div>
-                <div class="row">
-                    <div class="radio">
-                        <div class="col-xs-4">
-                            <label class="control-label radio-inline pull-right" >Restaurant</label>
-                        </div>
-                        <div class="col-xs-2">
-                            <input type="radio" id="restaurant" value="restaurant" name="user_kind"/>
-                        </div>
+                    <div class="row">
+                            <div class="col-md-6"><a class="btn btn-primary btn-block" id="person"><i class="glyphicon glyphicon-user"></i> Person</a></div>
+                            <div class="col-md-6"><a class="btn btn-danger btn-block" id="restaurant"><i class="glyphicon glyphicon glyphicon-map-marker"></i> Restaurant</a></div>
                     </div>
                 </div>
             </div>
+
+        <form id="registeration-form" style="display:none"class="form-horizontal"  method="post" enctype="multipart/form-data">
+            <input type="hidden" name="_token" value="{{ Session::getToken() }}">
+            <input type="hidden" style="display:none" id="person_option"     value="0" name="person"/>
+            <input type="hidden" style="display:none" id="restaurant_option" value="0" name="restaurant"/>
             <div class="row">
                 <div class="form-group">
                     <div class="col-xs-5">
@@ -60,6 +49,26 @@
                 </div>
             </div>
             <div class="row">
+                <div class="person form-group">
+                    <div class="col-xs-5">
+                        <label class="control-label">First Name</label>
+                    </div>
+                    <div class="col-xs-6">
+                        <input  class="form-control"  type="text" name="first_name"/>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="person form-group">
+                    <div class="col-xs-5">
+                        <label class="control-label">Last Name</label>
+                    </div>
+                    <div class="col-xs-6">
+                        <input  class="form-control" type="text" name="last_name"/>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
                 <div class="restaurant form-group">
                             <div class="col-xs-5"><label class="control-label">Restaurant Name</label>
                     </div>
@@ -69,7 +78,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="restaurant form-group">
+                <div class="form-group">
                     <div class="col-xs-5">
                             <label class="control-label">Telephone</label>
                     </div>
@@ -81,34 +90,54 @@
             <div class="row">
                 <div class="restaurant form-group">
                     <div class="col-xs-5">
-                    <label class="control-label">Restaurant Bio</label>
+                    <label class="control-label">About us</label>
                     </div>
                     <div class="col-xs-6">
                     <textarea rows="5" class="form-control" type="text" name="bio"></textarea>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="restaurant form-group">
+                <div class="person form-group">
                     <div class="col-xs-5">
-                        <label class="control-label">Logo</label>
+                        <label class="control-label">About me:</label>
                     </div>
                     <div class="col-xs-6">
-                        <input type="file" class="form-control" name="logo"/>
+                        <textarea rows="5" class="form-control" type="text" name="user_bio"></textarea>
                     </div>
                 </div>
             </div>
             <div class="row">
-                <div class="col-xs-5">
+                <div class="form-group">
+                    <div class="col-xs-5">
+                        <label class="control-label">Profile Picture</label>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <img width="150px" id="photo" src="{{asset("../public/black-white.png")}}"/>
+                            </div>
+                            <div class="col-md-6">
+                                <span class="btn btn-success btn-upload">
+                                    Upload Picture
+                                     <input type="file" class="form-control" id="photo-upload" name="logo"/>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-5">
                     <label class="control-label">Country</label>
                 </div>
-                <div class="col-xs-6">
-                    <select name="id_country" id="countries">
-                        {{--HERE YOU SHOULD PRINT THE VALUE OF COUNTRIES ARRAY--}}
-                        @foreach($aData['aCountries'] as $oCountry)
-                            <option id="{{$oCountry->id_country}}" value="{{$oCountry->id_country}}">{{$oCountry->country_name}}</option>
-                        @endforeach
-                    </select>
+                <div class="col-md-6">
+                    <div class="row">
+                        <select name="id_country" id="countries">
+                            {{--HERE YOU SHOULD PRINT THE VALUE OF COUNTRIES ARRAY--}}
+                            @foreach($aData['aCountries'] as $oCountry)
+                                <option id="{{$oCountry->id_country}}" value="{{$oCountry->id_country}}">{{$oCountry->country_name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
             </div>
             <div class="row">
@@ -279,27 +308,7 @@
                         <label class="control-label">Location</label>
                     </div>
                     <div class="col-xs-6">
-                        Add Map HERE
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="person form-group">
-                    <div class="col-xs-5">
-                         <label class="control-label">First Name</label>
-                    </div>
-                    <div class="col-xs-6">
-                        <input  class="form-control"  type="text" name="first_name"/>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="person form-group">
-                    <div class="col-xs-5">
-                        <label class="control-label">Last Name</label>
-                    </div>
-                    <div class="col-xs-6">
-                        <input  class="form-control" type="text" name="last_name"/>
+                        {{--<div id="googleMap" style="width: 350px; height: 350px"></div>--}}
                     </div>
                 </div>
             </div>
@@ -338,10 +347,8 @@
                     </div>
                 </div>
             </div>
-            <button type="button" class="btn .btn-primary" id="registeration-form-submit-button">Done</button>
+            <button type="button" class="btn btn-success btn-block m-t-30" id="registeration-form-submit-button">Create Account</button>
         </form>
         </div>
-    </div>
-    <div class="col-md-3">
     </div>
 @stop
