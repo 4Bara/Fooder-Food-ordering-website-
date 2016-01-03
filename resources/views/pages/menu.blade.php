@@ -1,6 +1,5 @@
 @extends('layouts.default')
 @section('style')
-    <script src="{{asset("../public/javascript/offers.js")}}" ></script>
     <style>
         .information{
             display:none;
@@ -8,6 +7,9 @@
         }
     </style>
 @stop
+@section('script')
+    <script src="{{asset("../public/javascript/offers.js")}}" ></script>
+@endsection
 @section('content')
 <div class="col-lg-12 menu-page-container">
     <div class="col-md-9 menu-page">
@@ -20,6 +22,7 @@
                         <p>{{$offer->name}}</p>
                     @endif
                 </div>
+                <button value="{{$menu->id_menu}}" id="favorite" class="btn btn-danger"><i class="glyphicon glyphicon-heart"></i></button>
             </div>
         </div>
         <div class="row">

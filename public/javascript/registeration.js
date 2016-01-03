@@ -46,6 +46,7 @@ $(document).ready(function() {
         $("#person_option").val(0);
         $(".person").hide();
         $(".question").hide();
+        getLocation();
     });
     $(".days").change(function(){
         if(this.checked) {
@@ -177,22 +178,39 @@ $(document).ready(function() {
     }
 
     function initialize(){
+        setTimeout(function(){},1000);
         var latitude = $('#latitude').val();
         var longitude= $('#longitude').val();
-        console.log("lat:"+latitude+" Longitude:"+longitude);
+        var myLatLng = {lat: parseFloat(latitude), lng: parseFloat(longitude)};
         var mapProp = {
-            center:new google.maps.LatLng(latitude,longitude),
-            zoom: 7,
+            center:new google.maps.LatLng(myLatLng),
+            zoom: 10,
             mapTypeId: google.maps.MapTypeId.ROADMAP
         };
+
         var map=new google.maps.Map(document.getElementById("googleMap"),mapProp);
-        map.addListener('click',function(event){
-            console.log(event.latLng.lat());
-            console.log(event.latLng.lng());
+        setTimeout(function(){},1000);
+        google.maps.event.addListener(map, "idle", function(){
+            google.maps.event.trigger(map, 'resize');
         });
+        var marker = new google.maps.Marker({
+            position: myLatLng,
+            draggable: true,
+            map: map,
+            title: 'Move it to the location!'
+        });
+
+
+        google.maps.event.addListener(marker, 'dragend', function() {
+            $("#marker-lat").val(marker.getPosition().lat);
+            $("#marker-long").val(marker.getPosition().lng);
+          //  geocodePosition(marker.getPosition());
+        });
+
+     //   map.setCenter(new google.maps.LatLng(latitude,longitude));
+
     }
 
-   // google.maps.event.addDomListener(window, 'load', getLocation);
 });
 
 

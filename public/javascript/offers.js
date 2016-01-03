@@ -1,4 +1,9 @@
 $(document).ready(function(){
+    $("#favorite").on("click",function(e){
+        e.preventDefault();
+        id_menu = $(this).val();
+        favorite(id_menu,'menu');
+    });
     $('.spinner').each(function(){
         $(this).spinner();
         $(this).val(1);

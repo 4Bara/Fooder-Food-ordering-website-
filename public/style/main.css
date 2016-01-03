@@ -1,8 +1,13 @@
+@import url(https://fonts.googleapis.com/css?family=Lato:400,700,900,300,400italic);
+
 html,body{
     padding-top:0;
     margin:0;
-    background-color: #f9f9f9;
+    background-image: url("../bg.png");
+    background-repeat: repeat;
+    font-family: Lato;
 }
+
 .white-box{
     background-color: white;
     box-shadow: 1px 1px 1px 1px rgba(0.09,0,0,0);
@@ -13,6 +18,81 @@ html,body{
     margin:0px auto;
     min-width: 50%;
     min-height: 200px;
+}
+.starspos{
+    position: relative;
+    bottom: 8px;
+}
+.star{
+    padding: 0px;
+    margin-left: -4px;
+    font-size: 13pt;
+    position: relative;
+    left: 6px;
+}
+.yellow{
+    color:goldenrod;
+}
+.gray{
+    color:gray;
+}
+#restaurant_name{
+    margin-top:8px;
+    font-size:17pt;
+    font-weight:bold;
+    text-overflow: clip;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    height:28px;
+    width:240px;
+}
+#price_range{
+    position: relative;
+    top: 3px;
+    font-size: 12pt;
+}
+.top-restaurant-box{
+    width:100%;
+    border:1px solid #d4d4d4;
+    border-radius: 4px;
+    background-color:white;
+    margin-bottom:10px;
+    box-shadow: 1px 2px 4px 0px rgba(0,0,0,0.09);
+    height:150px;
+}
+.restaurant_status{
+    margin-left: 10px;
+    /* top: 8px; */
+    position: relative;
+    top: 6px;
+}
+#reviews-count{
+    font-size: 10pt;
+    font-weight: normal;
+    /* top: -2px; */
+    bottom: 2px;
+    /* right: 9px; */
+    margin-left: 1px;
+}
+.top-restaurant-box:hover{
+    /*width:100%;*/
+    /*border:whitesmoke 1px solid;*/
+    /*border-radius: 4px;*/
+    /*background-color:white;*/
+    /*margin-bottom:10px;*/
+    border:1px solid #CCCCCC;
+    box-shadow: 1px 2px 4px 2px rgba(0,0,0,0.09);
+    /*height:150px;*/
+}
+.top-restaurant-box a{
+    text-decoration: none;
+    color:black;
+    font-size:large;
+}
+.top-restaurant-box img{
+    width: 100%;
+    margin-top: 22px;
+    vertical-align: middle;
 }
 .btn-upload{
     position: relative;
@@ -43,7 +123,8 @@ html,body{
 }
 .slidehome{
     height: 300px;
-    background-color: #0088ff;
+    background-image: url("../homepage.jpg");
+    /*background-color: #0088ff;*/
 }
 .centerup{
     position: absolute;
@@ -66,6 +147,9 @@ html,body{
 .main{
     margin-top: 51px;
 }
+#main-search-term{
+    border:1px solid darkgray;
+}
 .pages{
     margin-top: 85px;
 }
@@ -77,6 +161,7 @@ html,body{
 }
 #nav_bar_right {
     text-align: right;
+    margin:0px 0px 0px 0px;
 }
 #nav_bar_right button{
     background-color: #e8e8dc;
@@ -119,9 +204,7 @@ footer {
     height:150px;
     margin-right:10px;
 }
-.search-result #restaurant_name{
-    font-size:x-large
-}
+
 .search-result #price_range span{
     font-size:medium;
     color:green;
@@ -157,6 +240,7 @@ footer {
 }
 .offer-box #offer-picture{
     width:100%;
+    height:300px;
 }
 .offer-box #offer_title{
     font-size:x-large;
@@ -175,19 +259,27 @@ footer {
 
 /*Profile Page*/
 #left-side{
- background-color: #e8e8dc;
-    border: 1px solid gray;
-    border-radius: 25px;
-    text-align: center;
+
 }
 #left-side #profile-picture{
-   width:90%;
-    border-radius: 15px 15px 15px 15px;
-    padding:5px;
+    display: block;
+    width:100%;
+
 }
 #user-info-box{
-    margin:10px;
-    text-align: left;
+    background-color: white;
+    box-shadow: 1px 1px 1px 1px rgba(0.09,0,0,0);
+    border:1px solid #CCCCCC;
+    border-radius: 3px;
+    display:table;
+    padding:0px;
+}
+.info-box-content{
+    padding:10px;
+}
+#user-info-box #name{
+    font-size:20pt;
+    margin-top:0px;
 }
 #compliment{
     background-color: white;
@@ -195,17 +287,6 @@ footer {
 }
 #compliment img{
     width:25px;
-}
-#user-info-box #user_username{
-    font-size:25pt;
-}
-#user-info-box #user_bio{
-    font-size:14pt;
-    width:70%;
-}
-#user-info-box #user_location{
-    font-size:12pt;
-    color:darkblue;
 }
 #middle-section{
     border:1px solid #b9def0;
@@ -227,14 +308,31 @@ footer {
 #activity-date{
 
 }
+.fa{
+    margin-left:10px;
+}
 #user-followers{
-    font-size:x-large;
+    font-size:x-large
 }
 #favorite-restaurants img,#favorite-offers img, #favorite-menus img{
     width:30%;
     margin:2px;
 }
-
+.followers {
+margin:0px 0px 0px 0px;
+    font-size:12pt;
+    font-weight:bold;
+}
+.profile-list{
+    margin:0px;
+    margin-top:20px;
+}
+.bio{
+    margin-top:5px;
+}
+.profile-list li{
+    margin:0 20px;
+}
 
 /* Registeration Page */
 
@@ -270,15 +368,15 @@ footer {
 
 .days-checkboxes{
    width:10%;
-    padding-right:0px;
+
 }
 .times{
-    width:60%;
+    width:50%;
 }
 .day-title{
     width:20%;
-    padding:0px;
-    font-size: 8pt;
+    padding:1px;
+    font-size: 10pt;
     font-weight: bold;
 }
 .time-picker{
@@ -301,17 +399,30 @@ footer {
 }
 select{
     width:100%;
+    min-width: 100px;
+    max-width: 400px;
 }
+select[id='cuisines']{
+marign-right:9px;
+}
+
 /*Login Page*/
 #login-page{
-    text-align: center;
-    background-color:#e8e8dc;
-    border-radius: 25px;
+    /*text-align: center;*/
+    /*background-color:#e8e8dc;*/
+    /*border-radius: 25px;*/
     /*font-size:pt;*/
+    border-radius: 4px;
+    font-size:15pt;
+    text-align: center;
+}
+#login-page .row{
+    margin-top:10px;
 }
 #error{
-    border-radius: 15px;
+    border-radius: 5px;
     padding:2px;
+
 }
 
 /*
@@ -365,7 +476,7 @@ text-align: center;
     margin-left:15%;
 }
 .menu-page .restaurant-name{
-    font-size:24pt;
+    font-size:x-large;
 }
 .menu-page .page-title{
     font-size:25pt;

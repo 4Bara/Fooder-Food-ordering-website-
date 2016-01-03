@@ -1,6 +1,7 @@
 <meta name="description" content="">
 <meta name="author" content="Bara">
 <title>Fooder</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 <link rel="stylesheet" href={{asset("../public/libraries/bootstrap/css/bootstrap.min.css")}} />
 <link rel="stylesheet" href="{{asset("../public/libraries/jquery-ui/jquery-ui.css")}}"/>
 <link rel="stylesheet" href="{{asset("../public/libraries/jquery-ui/jquery.timepicker.css")}}"/>

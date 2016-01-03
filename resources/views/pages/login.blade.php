@@ -6,7 +6,7 @@
     <div class="col-md-4">
     </div>
     <div id="login-page" class="col-md-4">
-        <h1>Login</h1>
+
         @if($errors->any())
             <div class="row">
                 <div class="col-xs-12">
@@ -14,21 +14,28 @@
                 </div>
             </div>
         @endif
-        <form name="login-form" class="form-group" method="post" id="login-form">
-            <input type="hidden" name="_token" value="{{ Session::token() }}">
-            <div class="col-xs-6">
-           <label>username:</label>
+        <form name="login-form" class=" white-box form-group " method="post" id="login-form">
+                <input type="hidden" name="_token" value="{{ Session::token() }}">
+            <h1>Login</h1>
+            <div class="row">
+                <div class="col-xs-6">
+                    <label>username:</label>
+                </div>
+                <div class="col-xs-6">
+                    <input class="form-control" type="text" name="username"/>
+                </div>
             </div>
-            <div class="col-xs-6">
-            <input class="form-control" type="text" name="username"/>
+            <div class="row">
+                <div class="col-xs-6">
+                     <label>password:</label>
+                </div>
+                <div class="col-xs-6">
+                    <input class="form-control" type="password" name="password"/>
+                </div>
             </div>
-            <div class="col-xs-6">
-            <label>password:</label>
+            <div class="row">
+                <button class="btn btn-success" id="login-button">Login</button>
             </div>
-            <div class="col-xs-6">
-            <input class="form-control" type="password" name="password"/>
-            </div>
-            <button class="btn-lg" id="login-button">Login</button>
         </form>
     </div>
     </div>

@@ -102,10 +102,13 @@
                    {{$restaurant->restaurant_name}}
                </div>
                @if($data['user_type']!='restaurant' && $data['logged']=='yes')
-               <div class="send-feed-back-button">
-                  <a href="{{URL::asset('p/'.$restaurant->username.'/writeReview/id='.$restaurant->id_restaurant)}}"><button id="sendFeedBack" class="form-control">Got Feedback ?</button></a>
-               </div>
+                   <div class="send-feed-back-button">
+                      <a href="{{URL::asset('p/'.$restaurant->username.'/writeReview/id='.$restaurant->id_restaurant)}}">
+                          <button id="sendFeedBack" class="form-control">Write Review</button>
+                      </a>
+                   </div>
                @endif
+               <button value="{{$restaurant->id_restaurant}}" id="favorite" class="btn btn-danger"><i class="glyphicon glyphicon-heart"></i></button>
            </div>
        </div>
        <div class="row">
@@ -149,7 +152,7 @@
                    {{--$restaurant->price_range--}}
                    <div class="col-xs-4">
                        @for($i=0;$i<4;$i++)
-                       <span id="price-span" class="glyphicon glyphicon glyphicon-usd"></span>
+                               <span id="price-span" class="glyphicon glyphicon glyphicon-usd"></span>
                        @endfor
                        @for($i=0;$i<1;$i++)
                                <span id="gray-dollars" class="glyphicon glyphicon glyphicon-usd"></span>
@@ -217,6 +220,7 @@
                 <a id="showReviews" href="{{URL::asset('/p/'.$restaurant->username.'/reviews?username='.$restaurant->username)}}"><img id="offers-box-logo" src="{{URL::asset('reviews.jpg')}}"/></a>
             </div>
         </div>
+
         <div class="images-box row">
             <p>Images</p>
             <div class="images">

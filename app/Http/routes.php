@@ -29,6 +29,7 @@ Route::post('/login','loginController@login');
  */
 Route::post('addLike','userActions@addLike');
 Route::post('follow','userActions@follow');
+Route::post('favorite','userActions@favorite');
 
 /*
  * Restaurant's page routings
@@ -78,3 +79,4 @@ Route::post('checkout','CartController@checkout');
 Route::get('showOrders','userActions@showOrders');
 Route::get('showRestaurantsOrders','userActions@showRestaurantsOrders');
 Route::post('updateOrderStatus','userActions@updateOrderStatus');
+

@@ -18,6 +18,38 @@ class userActions extends controller
         $dIdUser = $aRequest['id_user'];
         DB::table('user_rating')->where(array('id_user'=>$dIdUser))->increment('likes_count');
     }
+    public function favorite(){
+        $aMessage = array();
+        if(!Backend::validateUser()){
+            $aMessage['status']=false;
+            $aMessage['message']="You're not logged in";
+            echo json_encode($aMessage);
+            exit;
+        }
+        $aRequest= \Request::all();
+        $aSession=\Session::all();
+        //dd(\Session::all()['id_user']);
+        $aParams = array('id_user'=>$aSession['id_user']);
+        $aParams['type']=$aRequest['type'];
+        $aParams['id_favorite']=$aRequest['id_'.$aRequest['type']];
+        $aParams['date_inserted']=Date("Y-m-d h:i:s");
+
+        $bExsist = DB::table("user_favorites")->where(array('id_favorite'=>$aParams['id_favorite'],'id_user'=>$aParams['id_user']))->get(array("*"));
+
+        if(!empty($bExsist[0])){
+            $aMessage['status']=true;
+            $aMessage['message']="";
+            echo json_encode($aMessage);
+            exit;
+        }
+
+        DB::table("user_favorites")->insert($aParams);
+
+        $aMessage['status']=true;
+        $aMessage['message']="Done!";
+        echo json_encode($aMessage);
+        exit;
+    }
     public function follow(){
         $aRequest = \Input::all();
         $dIdUser = $aRequest['id_user'];

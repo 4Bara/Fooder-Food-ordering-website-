@@ -129,7 +129,9 @@ class RegisterationController extends controller
                 case "logo":
                     $aRestaurant[$sParam] = $this->uploadPhotos($aRequest['logo'], 'logo');
                     break;
-                case 'location':break;
+                case 'location':
+                    $aRestaurant[$sParam]=json_encode(array('lat'=>$aRequest['lat'],'long'=>$aRequest['long']));
+                    break;
                 case 'opening_days':break;
                 case 'opening_hours':break;
                 case 'price_range':break;
@@ -164,8 +166,8 @@ class RegisterationController extends controller
 
         DB::table('restaurants')->insert($aRestaurant);
         //redirect to page..
-        echo "Restaurant Has been registered succesfully";
         return redirect()->intended('/');
+        echo "Restaurant Has been registered succesfully";
     }
 
     public function uploadPhotos($oImage,$sfile){

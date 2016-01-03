@@ -1,5 +1,6 @@
 <?php
 namespace App\Http\Controllers;
+use Faker\Provider\DateTime;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
@@ -16,6 +17,8 @@ use Symfony\Component\Console\Helper\Table;
  */
 
 Class Backend extends controller {
+        public static $aRestaurantsParams = array("restaurant_name","opening_days","location","username","logo","email","telephone","id_restaurant","rating","price_range","id_country");
+
         public static function uploadPhotos($oImage,$sfile){
                 $sDestination=  'images/photos/';
                 //$sName =$oImage->getClientOriginalName();
@@ -30,6 +33,37 @@ Class Backend extends controller {
                         return false;
                 }
         }
+        public static function checkifOpen($sJSON){
+                $aJSON = json_decode($sJSON);
+                $sDay = strtolower(Date("l",time()));
+                $sTime= strtotime(Date("h:ma"));
+
+               // dd(strtolower($sDay));
+                if(isset($aJSON->$sDay)){
+                        if(isset($aJSON->$sDay->from) && isset($aJSON->$sDay->to)){
+                                $from = strtotime($aJSON->$sDay->from);
+                                $to   = strtotime($aJSON->$sDay->to);
+                                if($from == $to){
+                                        return true;
+                                }
+                                if($sTime <  $from && $sTime > $to){
+                                        return true;
+                                }else{
+                                        return false;
+                                }
+                        }
+                        return true;
+                }else{
+                        return false;
+                }
+        }
+        public static function getImage($sLocation,$dWidth,$dHeight,$sResizeMethod){
+                if(empty($sLocation)){
+                        return 'noimage.png';
+                }else{
+                        return $sLocation;
+                }
+        }
         public static function validateUser(){
                 $aSession = \Session::all();
                 if(isset($aSession['loggedin']) && $aSession['loggedin']==true){
@@ -38,6 +72,19 @@ Class Backend extends controller {
                         return false;
                 }
         }
+        public static function getAge($then) {
+                $then = date('Ymd', strtotime($then));
+                $diff = date('Ymd') - $then;
+                return substr($diff, 0, -4);
+        }
+        public static function getDayName(){
+               echo date("l",time());
+        }
+        /*
+         * This function will be used everytime the user will open a view
+         * it will populate a variable with the needed login data.
+         *
+         */
         public static function LoginData(){
                 $aSession = \Session::all();
                 $aData = array();

@@ -142,10 +142,10 @@
             </div>
             <div class="row">
                 <div class="restaurant form-group">
-                    <div class="col-xs-5">
-                       <label class="control-label">Food Type "Cusine"</label>
+                    <div class="col-md-5">
+                       <label class="control-label">Food Type"Cuisine"</label>
                     </div>
-                    <div class="col-xs-6">
+                    <div class="col-md-6">
                         <select name="cuisines" id="cuisines">
                             @foreach($aData['aCuisines'] as $oCuisine)
                                     <option id="{{$oCuisine->id_cuisine}}" value="{{$oCuisine->id_cuisine}}">{{$oCuisine->name}}</option>
@@ -170,7 +170,7 @@
                                 <div class="col-xs-3 time-picker">
                                     <label>From:<input type="text" class="times" id="sunday_hours_from"/></label>
                                 </div>
-                                <div class="col-xs-3 time-picker no-margin">
+                                <div class="col-xs-2 time-picker no-margin">
                                     <label>To: <input type="text" class="times" id="sunday_hours_to"/></label>
                                 </div>
                             </div>
@@ -233,7 +233,9 @@
                                 <label>From:<input type="text" class="times" id="thursday_hours_from"/></label>
                             </div>
                             <div class="col-xs-3 time-picker no-margin">
-                                <label>To:<input type="text" class="times" id="thursday_hours_to"/></label>
+                                <label>To:
+                                    <input type="text" class="times" id="thursday_hours_to"/>
+                                </label>
                             </div>
                         </div>
                         <div class="row">
@@ -277,8 +279,13 @@
                     <div class="col-xs-5">
                         <label class="control-label">Smoking is allowed?</label>
                     </div>
-                    <div class="col-xs-1">
-                        <input type="checkbox" name="smoking_allowed"/>
+                    <div class="col-xs-6">
+                        <div class="row">
+                       <label>
+                           <input type="checkbox" name="smoking_allowed"/>
+                           Check if the restaurant allows smoking inside!
+                       </label>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -287,8 +294,13 @@
                     <div class="col-xs-5">
                         <label class="control-label">Provide Delivery Service</label>
                     </div>
-                    <div class="col-xs-1">
-                        <input type="checkbox" name="delivery"/>
+                    <div class="col-xs-6">
+                        <div class="row">
+                            <label>
+                            <input type="checkbox" name="delivery"/>
+                              Check if restaurant provide delivery!
+                            </label>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -308,7 +320,9 @@
                         <label class="control-label">Location</label>
                     </div>
                     <div class="col-xs-6">
-                        {{--<div id="googleMap" style="width: 350px; height: 350px"></div>--}}
+                        <div id="googleMap" style="width: 350px; height: 350px"></div>
+                        <input type="hidden" name="lat" id='marker-lat'/>
+                        <input type="hidden" name="long"  id='marker-long'/>
                     </div>
                 </div>
             </div>

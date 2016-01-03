@@ -3,66 +3,66 @@
     <script src="{{asset("../public/javascript/user.js")}}" ></script>
 @stop
 @section('content')
-
     @if(isset($data['visitor_id']))
-    <input type="hidden" id="visitor_id" value="{{$data['visitor_id']}}"/>
+        <input type="hidden" id="visitor_id" value="{{$data['visitor_id']}}"/>
     @endif
+    <div class="container">
     <div class="col-md-3" id="left-side">
-        <img id="profile-picture" src="{{$aUser['user']->photo}}"/>
-        <div id="user-info-box">
-            <div class="row">
-                <div class="col-xs-12">
-                    <label>Name: <span>{{$aUser['user']->first_name}} {{$aUser['user']->last_name}}</span></label>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-xs-12">
-                    <label>Bio:</label> <p>this is a test bio that will be used in exmaining and testing the website design.</p>
-                    {{--{{$user->user_bio}}--}}
-                </div>
-            </div>
-            @if(isset($data['country']))
-                <div class="row">
-                    <div class="col-xs-12">
-                        <label>Find me in:</label><p>{{$data['country']}}</p>
-                        {{--{{$user->user_bio}}--}}
-                    </div>
-                </div>
-            @endif
-            <input id="token" type="hidden" name="_token" value="{{ Session::token() }}">
-            <input type="hidden" id="id_user" value="{{$aUser['user']->id_user}}"/>
-            @if(isset($data['profileOwner']) && $data['profileOwner']=='no')
-                @if(!empty($data['visitor_id']))
-                <div class="row">
-                    <div class="col-xs-12">
-                        <Button id="compliment">Give me a like <img src="{{asset("../public/like.jpg")}}"/></Button>
-                    </div>
-                </div>
 
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <Button id="follow">Follow me!</Button>
+        <div id="user-info-box">
+                <img id="profile-picture" src="{{"../cover.jpg"}}"/>
+                {{--$aUser['user']->photo--}}
+              <div class="info-box-content">
+
+                    <h3 id="name">{{$aUser['user']->first_name}} {{$aUser['user']->last_name}}</h3>
+                    {{--<p>this is a test bio that will be used in exmaining and testing the website design.</p>--}}
+                      @if(isset($aUser['country']))
+                          <label>    <i class="glyphicon glyphicon-home"></i></label>  {{$aUser['country']}}
+                      @endif
+
+                          <label><i class="fa fa-birthday-cake"></i> {{$aUser['user']->age}} </label>
+                          <label><i class="fa fa-venus-mars"></i> {{$aUser['user']->gender}} </label>
+                    <p class="bio">{{$aUser['user']->user_bio}}</p>
+                    <input id="token" type="hidden" name="_token" value="{{ Session::token() }}">
+                    <input type="hidden" id="id_user" value="{{$aUser['user']->id_user}}"/>
+                    @if(isset($data['profileOwner']) && $data['profileOwner']=='no')
+                        @if(!empty($data['visitor_id']))
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <Button id="compliment">Give me a like <img src="{{asset("../public/like.jpg")}}"/></Button>
+                            </div>
                         </div>
-                    </div>
-                @endif
-            @endif
-            @if(isset($aUser['rating']))
-                <div class="row">
-                    <div class="col-xs-12">
-                        <label>I Have <span>{{$aUser['rating']}} Likes</span></label>
-                        {{--{{$user->user_bio}}--}}
-                    </div>
-                </div>
-            @endif
+
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <Button id="follow">Follow me!</Button>
+                                </div>
+                            </div>
+                        @endif
+                    @endif
+                    @if(isset($aUser['rating']))
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <label>I Have <span>{{$aUser['rating']}} Likes</span></label>
+                                {{--{{$user->user_bio}}--}}
+                            </div>
+                        </div>
+                    @endif
             {{--<p id="user_location"></p>--}}
-            <p id="user-followers">24k Followers</p>
+                  <div>
+                      <ul class="list-inline profile-list text-center">
+                          <li><span>Followers</span><br><span class="text-center">{{$aUser['followers']}}</span></li>
+                          <li><span>Reviews</span><br><span class="text-center">{{$aUser['reviews_count']}}</span></li>
+                      </ul>
+                  </div>
+        </div>
         </div>
     </div>
     <div class="col-md-6" id="middle-section">
         <div id="activities-section">
             <h2>My Activities</h2>
             <div class="row" id="activity">
-                <img id="activity-picture" src="https://upload.wikimedia.org/wikipedia/commons/1/13/Facebook_like_thumb.png"/>
+                {{--<img id="activity-picture" src="https://upload.wikimedia.org/wikipedia/commons/1/13/Facebook_like_thumb.png"/>--}}
                 <p id="activity-content">Bara,Wrote a reivew about <a href="">Macdonalds</a></p>
                 <p id="activity-date">2015-11-11 12:30:22</p>
             </div>
@@ -103,5 +103,6 @@
 
             </div>
         </div>
+      </div>
     </div>
 @stop

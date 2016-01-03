@@ -31,7 +31,7 @@ class restaurantController extends controller
 
         if(isset($aRequest['food_picture'])) {
             $oImage = $aRequest['food_picture'];
-            $FullImagePath = $this->uploadImage($oImage, 'food_picture');
+            $FullImagePath = Backend::uploadPhotos($oImage, 'food_picture');
             if(empty($FullImagePath)){
                 return view('pages.addItemPage')->withErrors('Image wasn\'t uploaded');
             }
@@ -78,16 +78,13 @@ class restaurantController extends controller
             //Go the previous page
         }
         $dIdRestaurant = $aRestaurantData[0]->id_restaurant;
-        //  dd($dIdRestaurant);
         $aMenus = DB::table('offers')->
         where(array('id_restaurant'=>$dIdRestaurant,'status'=>'active'))->paginate(2);
         $aMenus->setPath('offers');
         $aMenus->appends(["username"=>$username]);
 //                    get(array('id_menu','id_category','id_creator','picture','name','description'));
         $aData = array('page_type'=>"offer");
-        //dd($aMenus);
-        //dd(\Request::all());
-        // dd($aMenus);
+
         return view('/pages.menusList')->with(array('menus'=>$aMenus,'data'=>$aData));
     }
     public function showMenus($username){
@@ -98,17 +95,13 @@ class restaurantController extends controller
         $data = Backend::LoginData();
         $data['page_type']='menu';
         $dIdRestaurant = $aRestaurantData[0]->id_restaurant;
-      //  dd($dIdRestaurant);
         $aMenus = DB::table('menus')->
                     where(array('id_restaurant'=>$dIdRestaurant,'status'=>'active'))->paginate(2);
         $aMenus->setPath('menus');
         $aMenus->appends(["username"=>$username]);
-//                    get(array('id_menu','id_category','id_creator','picture','name','description'));
-        //dd($aMenus);
-        //dd(\Request::all());
-       // dd($aMenus);
         return view('/pages.menusList')->with(array('menus'=>$aMenus,'data'=>$data));
     }
+
     public function showOffer(){
         $aRequest = \Request::all();
         if(!isset($aRequest['id'])){
@@ -179,7 +172,7 @@ class restaurantController extends controller
         $aItemsList = DB::table('food')->where(array('id_restaurant'=>$aSession['id_user']))->get(array("*"));
         $data = Backend::LoginData();
         $data['page_type']='menu';
-        return view('/pages.addNewMenu')->with(array('data'=>$aData,'items'=>$aItemsList));
+        return view('/pages.addNewMenu')->with(array('data'=>$data,'items'=>$aItemsList));
     }
         /*
          * This function will take the request and save it into the
@@ -190,7 +183,7 @@ class restaurantController extends controller
         $aSession= $this->validateUser(\Session::all());
         $aMenu['name']=$aRequest['name'];
         if(isset($aRequest['cover_picture'])){
-        $aMenu['picture']=$this->uploadImage($aRequest['cover_picture'],'cover_picture');
+        $aMenu['picture']=Backend::uploadPhotos($aRequest['cover_picture'],'cover_picture');
         }
         $aMenu['description']=$aRequest['description'];
         $aMenu['id_restaurant']=$aSession['id_user'];
@@ -199,10 +192,10 @@ class restaurantController extends controller
         $aMenu['status']='active';
         $dIdMenu = DB::table('menus')->insertGetId($aMenu);
         $sFoodList = json_encode($aRequest['food']);
-
         $data = Backend::LoginData();
-        DB::table('menu_items')->insert(array('data'=>$data,'id_menu'=>$dIdMenu,'items'=>$sFoodList));
-            return redirect('/p/'.$aSession['username']);
+
+        DB::table('menu_items')->insert(array('id_menu'=>$dIdMenu,'items'=>$sFoodList));
+            return redirect('/p/'.$aSession['username'])->with(array('data'=>$data));
     }
     /*
      * This function will add the offer the offer's table
@@ -214,7 +207,7 @@ class restaurantController extends controller
         $aOffer['name']=$aRequest['name'];
         //dd($aRequest);
         if(isset($aRequest['cover_picture'])){
-            $aOffer['picture']=$this->uploadImage($aRequest['cover_picture'],'cover_picture');
+            $aOffer['picture']=Backend::uploadPhotos($aRequest['cover_picture'],'cover_picture');
         }
         $aOffer['type']='normal';
         $aOffer['description']=$aRequest['description'];
@@ -227,8 +220,8 @@ class restaurantController extends controller
         //Get the Food list and encode them into JSON before saving them into the DB
         $sFoodList = json_encode($aRequest['food']);
         $data = Backend::LoginData();
-        DB::table('offer_items')->insert(array('data'=>$data,'id_offer'=>$dIdOffer,'items'=>$sFoodList));
-        return redirect('/p/'.$aSession['username']);
+        DB::table('offer_items')->insert(array('id_offer'=>$dIdOffer,'items'=>$sFoodList));
+        return redirect('/p/'.$aSession['username'])->with(array('data'=>$data));
     }
     /*
      * This is the controller function
@@ -265,7 +258,7 @@ class restaurantController extends controller
         $aReview['body']=$aRequest['review'];
         $aReview['rating']=$aRequest['rating'];
         $oImage = $aRequest['review-picture'];
-        $FullImagePath = $this->uploadImage($oImage, 'review-picture');
+        $FullImagePath = Backend::uploadPhotos($oImage, 'review-picture');
         $aReview['review_image'] = $FullImagePath;
         $aReview['date_created']=Date('Y-m-d h:i:s');
         DB::table('reviews')->insert($aReview);
@@ -316,15 +309,19 @@ class restaurantController extends controller
      * it to the directory then return the directory or if failed
      * it will return false
      */
-    private function uploadImage($oImage,$sfile){
-        $sDestination=  'images/photos/';
-        $sDate=date('YmdHis');
-        if(Request::file($sfile)->move($sDestination, $sDate.$oImage->getClientOriginalName())){
-            //Asset will give you the directory of public folders, that will be used in saving photos to it!
-            return asset($sDestination.$sDate.$oImage->getClientOriginalName());
-        }
-        else {
-            return false;
-        }
-    }
+//    private function uploadImage($oImage,$sfile){
+//        try {
+//            $sDestination = 'images/photos/';
+//            $sDate = date('YmdHis');
+//            if (Request::file($sfile)->move($sDestination, $sDate . $oImage->getClientOriginalName())) {
+//                //Asset will give you the directory of public folders, that will be used in saving photos to it!
+//                return asset($sDestination . $sDate . $oImage->getClientOriginalName());
+//            } else {
+//                return false;
+//            }
+//        } catch(Exception $e){
+//
+//        }
+//    }
+
 }
