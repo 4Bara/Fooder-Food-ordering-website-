@@ -82,6 +82,7 @@ class userActions extends controller
             $aOrders[]=$aTmpOrder;
             $aTmpOrder=[];
         }
+
         $data = Backend::LoginData();
         $data['isRestaurant']=false;
 
@@ -94,9 +95,10 @@ class userActions extends controller
             return redirect('/');
         }
         $aSession = \Session::all();
-        $aOrdersList = DB::table('orders')->where(array('id_restaurant'=>$aSession['id_user']))->orderBy('date_inserted','desc')->get(array('*'));
+        $aOrdersList = DB::table('orders')->where(array('id_restaurant'=>$aSession['id_user']))->WhereNotIn('status',array('DONE'))->orderBy('date_inserted','desc')->get(array('*'));
         $aTmpOrder = array();
-
+        $dTotalPrice=0;
+        $aOrders=array();
         foreach($aOrdersList as $oOrder){
             $aTmpOrder['customer']=DB::table('users')->where(array('id_user'=>$oOrder->id_user))->get(array('first_name','last_name','user_mobile','username','email'))[0];
             $oOrderDetails =  json_decode($oOrder->order_details);
@@ -107,7 +109,7 @@ class userActions extends controller
                 $aTmpOrder['location'] = "http://maps.google.com/maps?q=$oLocation->lat,$oLocation->long";
             }
             $aTmpOrder['info']=$oOrder;
-
+            $dTotalPrice+=$oOrderDetails->total_price;
             $oOrder->date_inserted = Backend::ago(new \DateTime($oOrder->date_inserted));
             $aOrders[]=$aTmpOrder;
             $aTmpOrder=[];
@@ -115,8 +117,8 @@ class userActions extends controller
 
         $data = Backend::LoginData();
         $data['isRestaurant']=true;
-        $data['status']=array('preparing','cancled','not approved yet','on the way');
-        //dd($aOrders);
+        $data['status']=array('preparing','canceled','not approved yet','on the way');
+
         return view('pages.orders')->with(array('orders'=>$aOrders,'data'=>$data));
     }
     public function updateOrderStatus(){
@@ -124,8 +126,8 @@ class userActions extends controller
         DB::table('orders')->where(array('id_order'=>$aRequest['id_order']))->update(array('status'=>$aRequest['new_status'],'date_last_changed'=>date('Y-m-d h:i:s')));
     }
     private function parseOrderDetails($oOrderDetails){
-        $aOrder['total_price']=$oOrderDetails->total_price;
         $aItems = array();
+        $dTotalPrice=0;
         foreach($oOrderDetails->items as $oItem){
             $aTmpItem = array();
             $aTmpItem['id_item']=$oItem->id_item;
@@ -134,8 +136,10 @@ class userActions extends controller
             $aTmpItem['name']=$aItem[0]->name;
             $aTmpItem['qty']=$oItem->qty;
             $aTmpItem['spicy']=$oItem->spicy;
+            $dTotalPrice+=($aTmpItem['price']*$aTmpItem['qty']);
             $aItems[]=$aTmpItem;
         }
+        $aOrder['total_price']=$dTotalPrice;
         $aOrder['items']=$aItems;
         return $aOrder;
     }

@@ -8,7 +8,7 @@
                 @if(empty($oRestaurant->logo))
                     <img id="logo" style="margin-top:10px" src="{{asset("../public/noimage.jpg")}}"/>
                 @else
-                    <img id="logo" src="{{$oRestaurant->logo}}"/>
+                    <img id="logo" style="margin-top:10px" src="{{$oRestaurant->logo}}"/>
                 @endif
             </div>
             <div class="row">
@@ -16,11 +16,10 @@
                     <div class="row">
                         <h3 class="pull-left" id="restaurant_name">{{$oRestaurant->restaurant_name}}</h3>
                         @if($oRestaurant->opening_days)
-                            <span class="label restaurant_status label-success">opened</span>
+                            <span class="label pull-right restaurant_status label-success">opened</span>
                         @else
                             <span class="label restaurant_status label-danger">closed</span>
                         @endif
-                        <h4 class="pull-right" id="price_range"><i>$$$$$</i></h4>
                     </div>
                 </div>
                 <div class="row">

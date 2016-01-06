@@ -5,6 +5,12 @@
 $(document).ready(function(){
    $('.order_status').on('click',function(){
       var new_status = $(this).text();
+       if(new_status=='DONE') {
+           var answer = confirm("Are you sure that this order has finished?");
+           if(!answer){
+               return false;
+           }
+       }
       var id_order = $(this).parent().parent().find('.id_order').val();
        $(this).siblings(".btn-success").removeClass("btn-success").addClass("btn-danger").attr("disabled",false);
        $(this).removeClass("btn-danger").addClass("btn-success").attr("disabled",true);

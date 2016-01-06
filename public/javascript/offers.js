@@ -9,10 +9,12 @@ $(document).ready(function(){
         $(this).val(1);
     });
     $(".add-to-cart").on("click",function(){
-        var dItemUnits   = $(this).parent().siblings(".item-count").find("input").val();
-        var spicy        = $(this).parent().siblings(".item-spicy").find("select").val();
+        var dItemUnits   = $(this).parent().siblings().find(".item-count").find("input").val()
+        var spicy        = $(this).parent().siblings().find(".item-spicy").find("select").val()
         var idItem       = $(this).parent().siblings(".information").find("#id_item").val();
         var idRestaurant = $(this).parent().siblings(".information").find("#id_restaurant").val();
+
+
         $.ajax({
             url:'addToCart',
             type:"POST",

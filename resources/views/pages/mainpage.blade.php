@@ -16,12 +16,14 @@
                     <h3>Top Restaurants</h3>
                 </div>
                 <div class="col-md-12">
-                    @include("pages.restaurant-box")
+                    <div class="row">
+                     @include("pages.restaurant-box")
+                    </div>
                 </div>
             </div>
         </div>
         <div class="col-md-5">
-            <div class="row">
+            <div class="row filters">
                 <div class="search-filter col-md-12">
                         <label id="search-filter-title"><i class="glyphicon glyphicon-filter"></i>Search...</label>
                     <form id="search-filter-form" role="form">
@@ -35,7 +37,7 @@
                             <div class="distance" style="display: none">
                                 <div  class="col-md-12">Distance</div>
                                 <div class="col-md-10">
-                                    <input type="range" id="distance" value="2" min="1" max="15" step="1" name="distance" class="input-group"/>
+                                    <input type="range" id="distance" value="0" min="0" max="25" step="1" name="distance" class="input-group"/>
                                 </div>
                                 <div class="col-md-6">
                                     <label> Less than <span id="kilo-dist">2</span>KM</label>
@@ -84,15 +86,13 @@
                         </div>
                         <div class="row">
                             <div class="col-xs-3">
-                                <label>Smoking Allowed:</label>
+                                <label>Smoking Free:</label>
                             </div>
                             <div class="col-xs-2">
                                 <input class="form-control" type="checkbox" value="yes" name="no_smoking"/>
                             </div>
                         </div>
-                        <div class="row">
-                          <input type="submit" id="search" value="Search" class="btn btn-success btn-search" />
-                        </div>
+                          <input type="submit" id="search" value="Search" class="btn pull-right button-search btn-success btn-search" />
                     </form>
                 </div>
             </div>

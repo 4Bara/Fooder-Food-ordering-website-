@@ -17,7 +17,7 @@ use Symfony\Component\Console\Helper\Table;
  */
 
 Class Backend extends controller {
-        public static $aRestaurantsParams = array("restaurant_name","opening_days","location","username","logo","email","telephone","id_restaurant","rating","price_range","id_country");
+        public static $aRestaurantsParams = array("restaurant_name","opening_days","location","username","logo","email","telephone","id_restaurant","rating","opening_days","price_range","id_country");
 
         public static function uploadPhotos($oImage,$sfile){
                 $sDestination=  'images/photos/';
@@ -39,22 +39,18 @@ Class Backend extends controller {
                 $sTime= strtotime(Date("h:ma"));
 
                // dd(strtolower($sDay));
+
                 if(isset($aJSON->$sDay)){
+
                         if(isset($aJSON->$sDay->from) && isset($aJSON->$sDay->to)){
                                 $from = strtotime($aJSON->$sDay->from);
                                 $to   = strtotime($aJSON->$sDay->to);
-                                if($from == $to){
-                                        return true;
-                                }
-                                if($sTime <  $from && $sTime > $to){
+                                if(($sTime >=  $from) && ($sTime <= $to)){
                                         return true;
                                 }else{
                                         return false;
                                 }
                         }
-                        return true;
-                }else{
-                        return false;
                 }
         }
         public static function getImage($sLocation,$dWidth,$dHeight,$sResizeMethod){
@@ -90,7 +86,6 @@ Class Backend extends controller {
                 $aData = array();
 
                 $aData['items_count']=isset($aSession['cart']['items'])?count($aSession['cart']['items']):0;
-
                 if(isset($aSession['loggedin']) && $aSession['loggedin']==true){
                         $aData['username']=$aSession['username'];
                         $aData['id_user']=$aSession['id_user'];
@@ -99,7 +94,6 @@ Class Backend extends controller {
                 }else{
                         //Not logged in logic
                         $aData['logged']='no';
-                        $aData=array();
                 }
                 return $aData;
         }

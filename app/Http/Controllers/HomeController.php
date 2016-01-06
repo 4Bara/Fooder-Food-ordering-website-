@@ -269,6 +269,10 @@ class HomeController extends controller
             foreach($aTopRestaurants as $oRestaurant){
                 $dTotalReviews = 0;
                 $dScore=0;
+                //Get the cuisine name
+                if(isset($oRestaurant->cuisines)) {
+                    $oRestaurant->cuisines = DB::table('cuisines')->where(array('id_cuisine' => $oRestaurant->cuisines))->get(array("*"))[0]->name;
+                }
                 $aRatings = DB::table("reviews")->select("rating",DB::raw(" count('*') as total"))->where("id_restaurant",'=',$oRestaurant->id_restaurant)->groupBy('rating')->get();
                 foreach($aRatings as $oRating){
                     switch($oRating->rating){
@@ -293,6 +297,7 @@ class HomeController extends controller
          * and returns a list of restaurants, based on the matched ones
          */
         public function GetRestaurantsList($aData){
+            $aRestaurants=array();
             /*
              * Get the search term from the Data
              */
@@ -328,6 +333,7 @@ class HomeController extends controller
                  * Get a list of Restaurants IDS
                  */
                 $aRestaurantsIdsSearchTerm = $query->get(array("id_restaurant"));
+
             }
             /*
              * If the location data was sent with the query
@@ -337,19 +343,20 @@ class HomeController extends controller
                     $query->where('id_country', '=', $aData['location']);
                 }
             }
-
-            if(isset($aData['no_smoking'])) {
+            if(isset($aData['no_smoking']) && $aData['no_smoking']='yes') {
                 $sSmoking='yes';
-            }else{
+            }else if(isset($aData['no_smoking']) && $aData['no_smoking']='no'){
                 $sSmoking='no';
             }
+            if(isset($sSmoking)) {
+                $query->orWhere('smoking_allowed', '=', $sSmoking);
+            }
 
-            $query->where('smoking_allowed', '=', $sSmoking);
             $aRestaurantsIds= $query->get(array("id_restaurant"));
 
-            if(isset($aRestaurantsIdsSearchTerm))
-            array_merge($aRestaurantsIds,$aRestaurantsIdsSearchTerm);
-
+            if(isset($aRestaurantsIdsSearchTerm)) {
+                array_merge($aRestaurantsIds, $aRestaurantsIdsSearchTerm);
+            }
             foreach($aRestaurantsIds as $aRestaurantsId){
                 $aResults[]=$aRestaurantsId->id_restaurant;
             }
@@ -389,26 +396,28 @@ class HomeController extends controller
                 foreach($aRestaurants as $restaurant){
                     $restaurant->opening_days= Backend::checkifOpen($restaurant->opening_days);
                 }
+
             }
+
             $aFinalResult=array();
-            if($aData['userlat']!=0 && $aData['userlong']!=0) {
-
-                foreach ($aRestaurants as $restaurant) {
-                    if(!empty($restaurant->location)) {
-                        $point = json_decode($restaurant->location);
-                    }
-
-                    if (isset($point->lat)) {
-                        $dCalculatedDist = $this->haversineGreatCircleDistance($aData['userlat'], $aData['userlong'], $point->lat, $point->long)/1000;
-                        if ($dCalculatedDist <= $aData['distance']) {
-                            $restaurant->location=$dCalculatedDist;
-                            $aFinalResult [] = $restaurant;
+            //32.0265737,35.8360242 lat long, use if failed
+            if(isset($aData['userlat']) && isset($aData['userlong'])) {
+                if ($aData['userlat'] != 0 && $aData['userlong'] != 0) {
+                    foreach ($aRestaurants as $restaurant) {
+                        if (!empty($restaurant->location)) {
+                            $point = json_decode($restaurant->location);
+                        }
+                        if (isset($point->lat)) {
+                            $dCalculatedDist = $this->haversineGreatCircleDistance($aData['userlat'], $aData['userlong'], $point->lat, $point->long) / 1000;
+                            if ($dCalculatedDist <= $aData['distance']) {
+                                $restaurant->location = $dCalculatedDist;
+                                $aFinalResult [] = $restaurant;
+                            }
                         }
                     }
+                    //Search based on location!
+                    return $aFinalResult;
                 }
-                //Search based on location!
-
-                return $aFinalResult;
             }
             return $aRestaurants;
         }
@@ -418,7 +427,6 @@ class HomeController extends controller
          */
         public function search(){
             $aRequest = \Request::all();
-
             //get Restaurants List based on the search request
             $aRestaurants= self::GetRestaurantsList($aRequest);
 

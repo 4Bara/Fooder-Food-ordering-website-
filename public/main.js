@@ -51,7 +51,11 @@ var base_url = "http://localhost/fooder/app/Http/Controllers";
         data = $("#search-filter-form").serialize();
         var searchTerm  = $("#main-search-term").val();
         $("#main-search-term").val("");
-        data+="&searchTerm="+searchTerm;
+        if(searchTerm!='') {
+            data = "searchTerm="+searchTerm;
+        } else {
+            data += "&searchTerm=" + searchTerm;
+        }
         $.ajax({
             url:"search",
             data:data,
@@ -73,8 +77,13 @@ var base_url = "http://localhost/fooder/app/Http/Controllers";
     }
 
     function showPosition(position) {
-        $('#lat').val(position.coords.latitude);
-        $('#long').val(position.coords.longitude);
+        //32.0265737,35.8360242
+        $("#lat").val(32.0265737);
+        $("#long").val(35.8360242);
+        //$('#lat').val(position.coords.latitude);
+        //$('#long').val(position.coords.longitude);
+        console.log($("#lat").val());
+        console.log($('#long').val());
     }
 
 

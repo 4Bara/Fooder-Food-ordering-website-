@@ -23,14 +23,14 @@ class RegisterationController extends controller
      */
     private $aUserParams=['username','password','first_name','last_name','email','logo','id_country','date_of_birth','gender','telephone','user_bio','user_type','user_status'];
     private $aRestaurantParams=['username','password','restaurant_name','location','logo','email','telephone','id_country','bio',
-                                'cuisines',"date_registered",'opening_days','opening_hours','somking_allowed','provide_ordering','website','price_range',
+                                'cuisines',"date_registered",'opening_days','opening_hours','smoking_allowed','provide_ordering','website','price_range',
                                 'twitter_account'];
 
     public function newAccount(){
         $aRequest = \Input::all();
         //check if there is an account with the same username there
         $aTables = array('users','restaurants');
-        //dd($aRequest);
+
         //Loop through out the tables and check the values of usernames or emails to make sure no redundunt usersnames or emails used.
         foreach($aTables as $sTable) {
             try {
@@ -54,7 +54,6 @@ class RegisterationController extends controller
            $aRequest['user_status']='active';
            $this->addNormalUser($aRequest);
         }else if($aRequest['restaurant']==1) {
-            //dd($aRequest);
             $this->addRestaurantUser($aRequest);
         }
     }
@@ -103,6 +102,7 @@ class RegisterationController extends controller
      * @return \Illuminate\Http\RedirectResponse
      */
     private function addRestaurantUser($aRequest){
+
         $aRestaurant = array();
         //Loop throghout Restaurant's Params array, and put the values to be processed and saved into the database.
 
@@ -118,9 +118,9 @@ class RegisterationController extends controller
                 $aOpeningDays[$sDay]["to"]  =isset($aRequest[$sDay.'_to'])?$aRequest[$sDay.'_to']:'no';
             }
         }
+
         //Encoding them into jason to make them easier to be parsed
         $sOpeningDays = json_encode($aOpeningDays);
-
         foreach ($this->aRestaurantParams as $sParam){
             switch($sParam) {
                 case "username":
@@ -132,14 +132,16 @@ class RegisterationController extends controller
                 case 'location':
                     $aRestaurant[$sParam]=json_encode(array('lat'=>$aRequest['lat'],'long'=>$aRequest['long']));
                     break;
-                case 'opening_days':break;
+                case 'opening_days':
+                    $aRestaurant[$sParam]=$sOpeningDays;
+                    break;
                 case 'opening_hours':break;
                 case 'price_range':break;
                 case 'twitter_account':break;
                 case 'aOpeningDays':
                     $aRestaurant['opening_days'] = $sOpeningDays;
                 break;
-                case 'somking_allowed':
+                case 'smoking_allowed':
                     if(isset($aRequest[$sParam]))
                         $aRestaurant['smoking_allowed']="yes";
                     else
@@ -165,14 +167,14 @@ class RegisterationController extends controller
         }
         DB::table('restaurants')->insert($aRestaurant);
         //redirect to page..
-        return redirect()->intended('/');
         echo "Restaurant Has been registered succesfully";
+        return redirect()->intended('/');
+
     }
 
     public function uploadPhotos($oImage,$sfile){
         $sDestination=  'images/photos/';
         //$sName =$oImage->getClientOriginalName();
-        // dd($sDestination);
         $sDate=date('YmdHis');
         if(\Request::file($sfile)->move($sDestination, $sDate.$oImage->getClientOriginalName())){
             //Asset will give you the directory of public folders, that will be used in saving photos to it!

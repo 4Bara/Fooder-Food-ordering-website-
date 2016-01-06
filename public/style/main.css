@@ -148,6 +148,12 @@ html,body{
     margin-top: -3px;
     z-index: 10;
 }
+.filters{
+    margin-top:20px;
+    padding:5px;
+}
+.button-search{
+}
 .main{
     margin-top: 51px;
 }
@@ -230,9 +236,7 @@ footer {
     width:95%;
 }
 .search-filter{
-   background-color:whitesmoke;
-   width:100%;
-    padding:5px;
+  padding:10px;
 }
 .search-result label{
     float:left;
@@ -519,18 +523,20 @@ text-align: center;
 .item{
     border-radius: 12px;
     margin-top:5px;
+    padding:15px;
     background-color:white;
 }
 .col-xs-1{
     width:10%;
 }
-#item-img{
-    width:100%;
-}
+
 .item-description p{
     text-align: left;
 }
 
+.item-title p{
+ font-size:15pt;
+}
 .padding0{
     padding:0px;
 }

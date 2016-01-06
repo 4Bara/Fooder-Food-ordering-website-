@@ -10,7 +10,7 @@
     <div class="col-md-3" id="left-side">
 
         <div id="user-info-box">
-                <img id="profile-picture" src="{{"../cover.jpg"}}"/>
+                <img id="profile-picture" src="{{$aUser['user']->photo}}"/>
                 {{--$aUser['user']->photo--}}
               <div class="info-box-content">
 

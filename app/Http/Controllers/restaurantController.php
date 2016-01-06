@@ -22,8 +22,8 @@ class restaurantController extends controller
         if(!isset($aSession['loggedin']) || $aSession['loggedin'] !=true){
             return redirect('/');
         }
-
-       return view('pages.addItemPage');
+        $aData = Backend::LoginData();
+       return view('pages.addItemPage')->with(array("data"=>$aData));
     }
     public function addNewItem(){
         $aSession = \Session::all();
@@ -83,7 +83,8 @@ class restaurantController extends controller
         $aMenus->setPath('offers');
         $aMenus->appends(["username"=>$username]);
 //                    get(array('id_menu','id_category','id_creator','picture','name','description'));
-        $aData = array('page_type'=>"offer");
+        $aData=Backend::LoginData();
+        $aData['page_type']="offer";
 
         return view('/pages.menusList')->with(array('menus'=>$aMenus,'data'=>$aData));
     }
@@ -165,6 +166,7 @@ class restaurantController extends controller
             $data['showUnits'] = true;
             $data['user_type']='user';
         }
+
         $aItems = DB::table('food')->whereIn('id_item',$aItemsIds)->get(array('*'));
         return view('/pages.menu')->with(array('data'=>$data,'restaurant'=>$oRestaurant,'menu'=>$oMenu,'items'=>$aItems));
     }

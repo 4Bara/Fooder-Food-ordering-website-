@@ -12,8 +12,10 @@
 @endsection
 @section('content')
     <div class="container">
+        <div class="col-md-2">
+            </div>
+        <div class="col-md-8">
         <div class="row">
-
         </div>
         <div class="row menu_header">
                 <div class="restaurant-name">
@@ -37,81 +39,72 @@
             </div>
             @if($data['page_type']=='offer')
                 <div class="offer_price">
-                    <p>Price: ${{$offer->price}}</p>
+                    <p>Price:${{$offer->price}}</p>
                 </div>
             @endif
         </div>
         <div class="items">
             @foreach($items as $item)
             <div class="row item">
-                <div class="col-md-3 padding0">
-                    <img id="item-img" src="{{$item->picture}}"/>
-                </div>
-                {{--<div class="col-md-8">--}}
-                {{--</div>--}}
                 <div class="col-md-2 padding0">
-                    <div class="item-title">
-                        <h3>Name</h3>
-                        <p>{{$item->name}}</p>
-                    </div>
+                    <img width="150" style="margin-right:10px;" height="150" src="{{$item->picture}}"/>
                 </div>
-                <div class="col-md-3">
-                    <div class="item-description">
-                        <h3>Description</h3>
-                        <p>{{$item->description}}</p>
-                    </div>
-                </div>
-                <div class="col-md-1 padding0">
-                    <div class="item-healthy ">
-                        <h3>Healthy</h3>
-                        @if($item->healthy)
-                            <p>YES</p>
-                        @else
-                            <p>NO</p>
-                        @endif
-                    </div>
-                </div>
-                <div class="item-spicy">
-                <div class="col-md-1 padding0">
-                        <h3>spicy</h3>
-                        @if($item->spicy == "yes")
-                            <select class="spicy">
-                                <option value="yes">YES</option>
-                                <option value="no">NO</option>
-                            </select>
-                        @else
-                            <select class="spicy" disabled="disabled">
-                                <option value="no" selected>NO</option>
-                            </select>
-                        @endif
-                    </div>
-                </div>
-                @if($data['page_type']=='menu')
-                <div class="col-xs-1">
-                    <div class="item-spicy">
-                        <h3>Price</h3>
-                        <p>{{$item->price}}$</p>
-                    </div>
-                </div>
-                @endif
-                @if($data['showUnits'])
-                    <div class="item-count">
-                        <div class="col-xs-1">
-                            <h3>Units</h3>
-                            <input id="item_qty" class='spinner' style="width:20px" name="item_qty">
+                <div class="col-md-4 ">
+                    <div class="col-md-12">
+                        <div class="item-title">
+                            <p>{{$item->name}}</p>
+                        </div>
+                        <div class="item-description">
+                            <p>{{$item->description}}</p>
                         </div>
                     </div>
-                    <div id="add-to-cart">
-                        <h3></h3>
+                </div>
+                <div class="col-md-3 padding0">
+                    <div class="item-healthy ">
+                        @if($item->healthy)
+                            <p><b>Healthy:</b>YES</p>
+                        @else
+                            <p><b>Healthy:</b>NO</p>
+                        @endif
+                    </div>
+                        @if($data['page_type']=='menu')
+                                <div class="item-spicy">
+                                    <p><b>Price:</b>{{$item->price}}$</p>
+                                </div>
+                        @endif
+                    <div class="item-spicy">
+                            <b>Spicy:</b>
+                            @if($item->spicy == "yes")
+                                <select class="spicy">
+                                    <option value="yes">YES</option>
+                                    <option value="no">NO</option>
+                                </select>
+                            @else
+                                <p>
+                                    NO
+                                </p>
+                            @endif
+                    </div>
+                    @if($data['showUnits'])
+                        <div class="item-count">
+                               <p><b>QTY:</b></p> <input id="item_qty" class='spinner' style="width:20px" name="item_qty">
+                        </div>
+
+                    @endif
+                </div>
+                <div class="col-md-3">
+                    <div id="add-to-cart" class="col-md-5 text-center">
                         <input type="button" name="add_item_to_cart" class="btn add-to-cart" value="Add">
                     </div>
                     <div class="information" style="">
                         <input id="id_item" value="{{$item->id_item}}" />
                         <input id="id_restaurant" value="{{$item->id_restaurant}}"/>
                     </div>
-                @endif
-            </div>
+                </div>
+                </div>
             @endforeach
+            </div>
         </div>
+      </div>
     </div>
 @stop

@@ -25,12 +25,15 @@ class CartController extends Controller{
         $aCartData = array();
         if(isset($aCart['items'])) {
             foreach ($aCart['items'] as $aItem) {
-                $sRestaurant = DB::table('restaurants')->where(array("id_restaurant" => $aItem['idRestaurant']))->get(array("restaurant_name"))[0]->restaurant_name;
-                $oItem = DB::table('food')->where(array('id_item' => $aItem['idItem']))->get(array('name', 'price'))[0];
-                $aItem['name'] = $oItem->name;
-                $aItem['total_price'] = $oItem->price * $aItem['amount'];
-                $cartTotalPrice+=$aItem['total_price'];
-                $aCartData['restaurants'][$sRestaurant][] = $aItem;
+                if(isset($aItem['idRestaurant'])) {
+                    $aRestaurant = DB::table('restaurants')->where(array("id_restaurant" => $aItem['idRestaurant']))->get(array("restaurant_name"));
+                    $sRestaurant = $aRestaurant[0]->restaurant_name;
+                    $oItem = DB::table('food')->where(array('id_item' => $aItem['idItem']))->get(array('name', 'price'))[0];
+                    $aItem['name'] = $oItem->name;
+                    $aItem['total_price'] = $oItem->price * $aItem['amount'];
+                    $cartTotalPrice += $aItem['total_price'];
+                    $aCartData['restaurants'][$sRestaurant][] = $aItem;
+                }
             }
         }
         $aCartData['tax']=.16;
@@ -60,8 +63,9 @@ class CartController extends Controller{
          * Total price will be saved here,
          * this also will be used to indicate the last price that will be required on each restaurant
          */
-        $dTotalPrice = 0;
+
         foreach($aRequest['items'] as $item){
+            $dTotalPrice = 0;
             $oItem = DB::table('food')->where(array('id_item'=>$item['id_item']))->get(array("id_restaurant","price"))[0];
             $tempItem['id_item']=$item['id_item'];
             $tempItem['qty']=$item['qty'];
@@ -79,6 +83,7 @@ class CartController extends Controller{
         foreach($aRestaurants as $id_restaurant => $aRestaurant){
             $id_user = \Session::all()['id_user'];
             $sOrderDetails = (json_encode($aRestaurant));
+
             $aOrder = array(
                 'id_user'=>$id_user,
                 'id_restaurant'=>$id_restaurant,
@@ -88,8 +93,10 @@ class CartController extends Controller{
                 'date_inserted'=>Date('Y-m-d h:i:s'),
                 'status'=>'not_approved_yet'
             );
+
             DB::table('orders')->insert($aOrder);
         }
+
         \Session::forget('cart');
         return redirect('/');
     }

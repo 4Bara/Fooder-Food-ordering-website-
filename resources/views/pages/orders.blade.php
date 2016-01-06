@@ -80,7 +80,6 @@
                     </div>
                     <div class="col-md-2">
                         <p>Details</p>
-
                     </div>
                     @if($data['isRestaurant'])
                         <div class="col-md-2">
@@ -180,7 +179,7 @@
                             <div class="col-md-9">
                             </div>
                             <div class="col-md-3" style="background-color: #f9f9f9;margin-bottom: 20px;padding: 5px;text-align: center;">
-                                 <span style="color: red;font-weight: bold;">Total : ${{0.16*$aOrder['info']->order_details['total_price']+$aOrder['info']->order_details['total_price']}}</span>
+                                 <span style="color: red;font-weight: bold;">Total with tax: ${{0.16*$aOrder['info']->order_details['total_price']+$aOrder['info']->order_details['total_price']}}</span>
                             </div>
                         @if($data['isRestaurant'])
                              <a class="btn pull-right btn-primary order_status" style="">DONE</a>

@@ -28,7 +28,6 @@ $(document).ready(function() {
             long:long,
             lat:lat
         };
-        alert(note);
         $.ajax({
             url: 'checkout',
             type: 'post',

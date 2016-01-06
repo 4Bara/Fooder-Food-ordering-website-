@@ -52,7 +52,9 @@ $(document).ready(function() {
         if(this.checked) {
             var nameOfTheDay = $(this).attr("name");
             $("#"+nameOfTheDay+"_hours_from").prop("disabled",false);
+            $("#"+nameOfTheDay+"_hours_from").val("9:00am");
             $("#"+nameOfTheDay+"_hours_to").prop("disabled",false);
+            $("#"+nameOfTheDay+"_hours_to").val("9:00pm");
         }else{
             var nameOfTheDay = $(this).attr("name");
             $("#"+nameOfTheDay+"_hours_from").prop("disabled",true);
@@ -71,12 +73,14 @@ $(document).ready(function() {
        // form_data=$("#registeration-form").serialize();
           $(".days:checked").each(function(){
               var dayname= $(this).attr("name");
-              var from ='&'+dayname+"_from="+ $("#"+dayname+"_hours_from").val()+"&";
-              var to = dayname+"_to="+ $("#"+dayname+"_hours_to").val();
+              var from =$("#"+dayname+"_hours_from").val();
+              var to = $("#"+dayname+"_hours_to").val();
+
               //put the results into form_data to be sent to php
-            form_data.append("from",from);
-            form_data.append("to",to);
+            form_data.append(dayname+"_from",from);
+            form_data.append(dayname+"_to",to);
           });
+
         //$(":file").each(function(){
         //    var file = this.files[0];
         //});
@@ -88,7 +92,7 @@ $(document).ready(function() {
             contentType: false,
             data:form_data,
             success:function(data){
-                alert(data);
+                alert("You've registered successfully");
             }
         });
     });
@@ -108,6 +112,7 @@ $(document).ready(function() {
         }
         return true;
     }
+
     function onlyCharactersAllowed(param,sParam){
         if(!/^[a-zA-Z]+$/.test(param)){
             alert(sParam+' is not allowed');

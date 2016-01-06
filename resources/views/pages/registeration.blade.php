@@ -171,7 +171,7 @@
                                     <label>From:<input type="text" class="times" id="sunday_hours_from"/></label>
                                 </div>
                                 <div class="col-xs-2 time-picker no-margin">
-                                    <label>To: <input type="text" class="times" id="sunday_hours_to"/></label>
+                                    <label>To: <input  type="text" class="times" id="sunday_hours_to"/></label>
                                 </div>
                             </div>
                             <div class="row">
