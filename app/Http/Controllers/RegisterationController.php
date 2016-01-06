@@ -163,7 +163,6 @@ class RegisterationController extends controller
                 break;
             }
         }
-
         DB::table('restaurants')->insert($aRestaurant);
         //redirect to page..
         return redirect()->intended('/');

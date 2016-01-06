@@ -43,21 +43,11 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-xs-2">
-                                <label>Prices:</label>
-                            </div>
-                            <div class="col-xs-2">
-                                <label>FROM:</label>
-                            </div>
-                            <div class="col-xs-3">
-                                <input class="form-control" type="text" name="from_price"/>
-                            </div>
-                            <div class="col-xs-1">
-                                <label>To</label>
-                            </div>
-                            <div class="col-xs-3">
-                                <input class="form-control" type="text" name="to_price"/>
-                            </div>
+                            <p>
+                                <label for="amount">Price range:</label>
+                                <input name="price_range" type="text" id="amount" readonly style="border:0; color:cornflowerblue; font-weight:bold;">
+                            </p>
+                            <div id="slider-range"></div>
                         </div>
                         <div class="row">
                             <div class="col-xs-3">
@@ -108,15 +98,30 @@
             </div>
             <div class="row">
                     <h3>Offers</h3>
-                    <div class="offer-box">
-                        <img id="offer-picture" stlye="height:300px"src="http://s3images.coroflot.com/user_files/individual_files/original_452976_OEirjUTLAZCVu32XX70Lngk6N.jpg"/>
-                        <p id="restaurant_id" value="1" hidden></p>
-                        <p id="offer_id" value="1" hidden></p>
-                        <p id="offer_title">WaFFER!! 50%</p>
-                        <p id="offer_price">Offer Price:<span>12$</span></p>
-                        <p id="offer_restaurant">From:<a href="restaurant_page">Macdonalds</a></p>
-                        <a href="offer_page">More Details....</a>
-                    </div>
+                        <div class="offers-box">
+                            @foreach($aRandomOffers as $oOffer)
+                                <div class="offer-box">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <img id="offer-picture" src="{{$oOffer->picture}}"/>
+                                    </div>
+                                </div>
+                                <p id="restaurant_id" value="{{$oOffer->id_restaurant}}" hidden></p>
+                                <p id="offer_id" value="{{$oOffer->id_offer}}" hidden>
+                                    <div class="row">
+                                        <div id="offer_description">
+                                            <p id="offer_title">Offer Name:{{$oOffer->name}}</p>
+                                            <p>Details:</p>
+                                            <p id="offer_price">Price:<span>${{$oOffer->price}}</span></p>
+                                            <p>From <span id="restaurant_name"><a href="p/{{$oOffer->id_restaurant}}">{{$oOffer->id_restaurant}}</a></span></p>
+                                            <p id="">{{$oOffer->description}}</p>
+                                        </div>
+                                    </div>
+                                <a href="offer?id={{$oOffer->id_offer}}">More Details....</a>
+                                </div>
+                            @endforeach
+                </div>
+            </div>
         </div>
     </div>
     </div>

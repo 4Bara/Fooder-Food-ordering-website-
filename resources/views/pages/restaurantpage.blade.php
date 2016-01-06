@@ -4,9 +4,6 @@
         #restuarnat-page-logo{
             width:120px;
         }
-        .restaurant-name{
-            font-size:35pt;
-        }
         .restaurant-left{
             border:2px solid black;
         }
@@ -15,7 +12,6 @@
         }
         .bio-div p{
             font-size:16pt;
-            border:1px solid firebrick;;
             padding:5px;
         }
         .bio-div #about-us{
@@ -85,32 +81,67 @@
         #gray-dollars{
             color:gray;
         }
+
+        .restaurant-info-box{
+            background-color:white;
+            border-radius: 4px;
+            border:1px solid #f0f0f0;
+        }
+        #restaurant-logo{
+            width:100%;
+        }
+        #restaurant-name{
+            margin-top:20px;
+            font-size:20pt;
+        }
+        .restaurant-name{
+            padding:0px;
+        }
+        .restaurant-logo{
+            padding:0px;
+        }
+        #sendFeedBack{
+            font-size:14pt;
+            margin-bottom:10px;
+        }
+        .location{
+            text-align: center;;
+        }
+        .row{
+            margin-bottom:5px;
+        }
     </style>
 @stop
 @section('script')
+    <script src="http://maps.googleapis.com/maps/api/js"></script>
     <script src="{{asset("../public/javascript/restaurant.js")}}" ></script>
 @stop
 @section('content')
     <div class="container">
-    <div class="restaurant-left col-md-4">
-       <div class="row">
-           <div class="col-xs-4">
-               <img id='restuarnat-page-logo' src="{{$restaurant->logo}}"/>
-           </div>
-           <div class="col-xs-8">
-               <div class="restaurant-name">
-                   {{$restaurant->restaurant_name}}
-               </div>
-               @if($data['user_type']!='restaurant' && $data['logged']=='yes')
-                   <div class="send-feed-back-button">
-                      <a href="{{URL::asset('p/'.$restaurant->username.'/writeReview/id='.$restaurant->id_restaurant)}}">
-                          <button id="sendFeedBack" class="form-control">Write Review</button>
-                      </a>
-                   </div>
-               @endif
-               <button value="{{$restaurant->id_restaurant}}" id="favorite" class="btn btn-danger"><i class="glyphicon glyphicon-heart"></i></button>
-           </div>
-       </div>
+    <div class="restaurant-info-box col-md-4">
+
+        <div class="row">
+            <div class="col-md-4 restaurant-logo">
+                   <img id='restaurant-logo' src="{{$restaurant->logo}}"/>
+            </div>
+            <div class="col-md-8 restaurant-name">
+                  <p id="restaurant-name">{{$restaurant->restaurant_name}}</p>
+            </div>
+        </div>
+
+        @if($data['user_type']!='restaurant' && $data['logged']=='yes')
+            <div class="row">
+                       <div class="send-feed-back-button col-md-9">
+                          <a href="{{URL::asset('p/'.$restaurant->username.'/writeReview/id='.$restaurant->id_restaurant)}}">
+                              <button id="sendFeedBack" class="form-control"><i class="glyphicon glyphicon-pencil"></i> Write Review about us</button>
+                          </a>
+                       </div>
+                <div class="col-md-3">
+                       <button title="Click to favorite this restaurant" value="{{$restaurant->id_restaurant}}" id="favorite" class="btn btn-danger"><i class="glyphicon glyphicon-heart"></i></button>
+                </div>
+            </div>
+        @endif
+
        <div class="row">
            <div class="bio-div">
                <p id="about-us">About us:</p>
@@ -118,71 +149,59 @@
            </div>
        </div>
        <div class="row">
-           <div class="address row">
-               <div class="col-xs-3">
-                  <label>Address:</label>
-               </div>
+           @if(isset($restaurant->location))
+           <div class="location">
+               <label>Our Location</label>
+               <input type="hidden" id="latitude" value="{{$restaurant->location->lat}}"/>
+               <input type="hidden" id="longitude" value="{{$restaurant->location->long}}"/>
+               <div id="location-map" style="width: 378px; height: 350px"></div>
                <div class="col-xs-2">
                   <span id="country-span">Amman,Jordan</span>
                </div>
            </div>
+          @endif
+       </div>
            <div class="cuisines row">
-               <div class="col-xs-3">
                    <label>Cuisines:</label>
-               </div>
-               <div class="col-xs-4">
                    <span id="cuisines-span">{{$restaurant->cuisines}}</span>
-               </div>
            </div>
            <div class="telephone row">
-               <div class="col-xs-3">
                   <label>Tel:</label>
-               </div>
-               <div class="col-xs-2">
                    <span id="tel-span">{{$restaurant->telephone}}</span>
-               </div>
            </div>
-       </div>
-       <div class="row">
-           <div class="price-range row">
-               <div class="col-xs-3">
-                   <label>Price:</label>
-               </div>
-               @if(!empty($restaurant->price_range))
-                   {{--$restaurant->price_range--}}
-                   <div class="col-xs-4">
-                       @for($i=0;$i<4;$i++)
-                               <span id="price-span" class="glyphicon glyphicon glyphicon-usd"></span>
-                       @endfor
-                       @for($i=0;$i<1;$i++)
-                               <span id="gray-dollars" class="glyphicon glyphicon glyphicon-usd"></span>
-                       @endfor
-                   </div>
-               @else
-                   <div class="col-xs-7">
-                       <span>Price Wasn't provided</span>
-                   </div>
-               @endif
-           </div>
-       <div class="reviews row">
-           <div class="col-xs-3">
-               <label>Reviews:</label>
-           </div>
-           <div class="col-xs-3">
-               <span id="tel-span">{{$restaurant->telephone}}</span>
-           </div>
-       </div>
-           <div class="rating row">
-               <div class="col-xs-3">
-                   <label>Rating :</label>
-               </div>
-               <div class="col-xs-2">
-                   <span>{{$restaurant->rating}}/5</span>
-               </div>
-           </div>
+            <div class="reviews row">
+                <label>Reviews:</label>
+                    <span id="tel-span">{{$data['reviews_count']}}</span>
+            </div>
+        <div class="rating row">
+                <label>Rating :</label>
+                <span>{{$restaurant->rating}}/5</span>
+        </div>
+        <div class="row">
+            <div class="price-range row">
+                <div class="col-xs-3">
+                    <label>Price:</label>
+                </div>
+                @if(!empty($restaurant->price_range))
+                    {{--$restaurant->price_range--}}
+                    <div class="col-xs-4">
+                        @for($i=0;$i<4;$i++)
+                            <span id="price-span" class="glyphicon glyphicon glyphicon-usd"></span>
+                        @endfor
+                        @for($i=0;$i<1;$i++)
+                            <span id="gray-dollars" class="glyphicon glyphicon glyphicon-usd"></span>
+                        @endfor
+                    </div>
+                @else
+                    <div class="col-xs-7">
+                        <span>Price Wasn't provided</span>
+                    </div>
+                @endif
+            </div>
+        </div>
         <div class="row">
             <div class=" restaurant-status col-xs-12">
-                @if(!isset($extra['restaurant-status']))
+                @if($restaurant->opening_days)
                 <div class="restaurant-open">
                     <p>we are open NOW!</p>
                 </div>
@@ -191,14 +210,9 @@
                         <p>we are closed!</p>
                     </div>
                 @endif
-
             </div>
         </div>
        </div>
-           {{--<label>Reviews:<span id="reviews-span">4334</span></label>--}}
-           {{--<label>Rating:<span id="rating-span">****</span></label>--}}
-       </div>
-
     <div class="col-md-8">
         @if($data['logged']=="yes" && $data['profileOwner']=='yes')
             <div class="row restaurant-admin-panel">
@@ -212,24 +226,11 @@
             </div>
             <div class="offers-box col-md-6">
                 <p>Our Menus:</p>
-                {{--value="{{$restaurant->username}}"--}}
                 <a id='showMenus' href="{{URL::asset('p/'.$restaurant->username.'/menus?username='.$restaurant->username)}}"><img id="offers-box-logo" src="http://tiffanythai.com/wp-content/uploads/2014/02/Menu_Relief_Logo_cmyk_V1-380x380.jpg"/></a>
             </div>
             <div class="offers-box col-md-6">
                 <p>Reviews about us</p>
                 <a id="showReviews" href="{{URL::asset('/p/'.$restaurant->username.'/reviews?username='.$restaurant->username)}}"><img id="offers-box-logo" src="{{URL::asset('reviews.jpg')}}"/></a>
-            </div>
-        </div>
-
-        <div class="images-box row">
-            <p>Images</p>
-            <div class="images">
-                <img src="http://www.thelalit.com/d/the-lalit-new-delhi/media/TheLalitNewDelhi/FoodBeverage_Restaurants/24_7Restaurant/24-7RestaurantDelhi.jpg"/>
-                <img src="http://www.houstonlocal.news/wp-content/uploads/2015/09/bjs-free-pizookie-600p.jpg"/>
-                <img src="http://singlegrain.com/wp-content/uploads/2010/04/restaurants-image-243.jpg"/>
-                <img src="http://www.houstonlocal.news/wp-content/uploads/2015/09/bjs-free-pizookie-600p.jpg"/>
-                <img src="http://www.houstonlocal.news/wp-content/uploads/2015/09/bjs-free-pizookie-600p.jpg"/>
-                <img src="http://www.houstonlocal.news/wp-content/uploads/2015/09/bjs-free-pizookie-600p.jpg"/>
             </div>
         </div>
     </div>

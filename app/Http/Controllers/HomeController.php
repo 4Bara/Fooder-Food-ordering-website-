@@ -9,6 +9,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Request;
 use DB;
 use App\Http\Controllers\Controller;
+use Faker\Provider\Image;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
 
@@ -45,7 +46,6 @@ class HomeController extends controller
              * to be processed later to get the rating of the restaurants
              */
             $aReviews = array();
-
             /*
              * This to get the count of reviews that was written on the restaurant.
              */
@@ -59,9 +59,13 @@ class HomeController extends controller
 
             $aFiltersData['countries']=$aCountries;
             $aFiltersData['food_type']=$aFoodType;
-
+            $aRandomOffers = DB::table('offers')->orderByRaw("Rand()")->limit(3)->get(array('*'));
+            foreach($aRandomOffers as $oOffer){
+                $oRestaurantName= DB::table("restaurants")->where(array('id_restaurant'=>$oOffer->id_restaurant))->get(array("restaurant_name"));
+                $oOffer->id_restaurant= $oRestaurantName[0]->restaurant_name;
+            }
             //Now redirect to main page and pass the variables with the page to be used by the templating enigne.
-            return view('pages.mainpage')->with(array("data"=>$data,"aFilterData"=>$aFiltersData,"aTopRestaurants"=>$aTopRestaurants,"aReviews"=>$aReviews));
+            return view('pages.mainpage')->with(array("data"=>$data,"aRandomOffers"=>$aRandomOffers,"aFilterData"=>$aFiltersData,"aTopRestaurants"=>$aTopRestaurants,"aReviews"=>$aReviews));
         }
         /*
          * This will redirect the user to the registeration page
@@ -150,7 +154,7 @@ class HomeController extends controller
                  * Being here means that the username is not for a normal user,
                  * Check restauarant's table to check if the username is for a restaurant.
                  */
-                $aParams = array('username','id_restaurant','id_country','restaurant_name','email','logo','telephone','twitter_account','bio','price_range','cuisines','opening_days','smoking_allowed','provide_ordering','website','rating');
+                $aParams = array('username','id_restaurant','id_country','restaurant_name','email','logo','telephone','twitter_account','bio','price_range','cuisines','opening_days','smoking_allowed','provide_ordering','website','rating','location');
                 $aUserData = DB::table('restaurants')->where(array('username'=>$sUsername))->get($aParams);
 
                 if(empty($aUserData)) {
@@ -161,10 +165,16 @@ class HomeController extends controller
                      */
                     return redirect()->intended('/')->with(array('data'=>$data));
                 }
-               // foreach($aParams as $sParam) {
                     $oRestarant = $aUserData[0];
-               // }
-
+                    if(isset($oRestarant->cuisines)) {
+                        $sCuisineName = DB::table("cuisines")->where(array("id_cuisine" => $oRestarant->cuisines))->get(array("name"));
+                        if(!empty($sCuisineName)){
+                            $oRestarant->cuisines=$sCuisineName[0]->name;
+                        }
+                    }
+                    $data['reviews_count']=DB::table("reviews")->where(array("id_restaurant"=>$oRestarant->id_restaurant))->count(array("*"));
+                    $oRestarant->opening_days = Backend::checkifOpen($oRestarant->opening_days);
+                    $oRestarant->location= json_decode($oRestarant->location);
                 //username is for a restaurant, Redirect it to the restaurant's page.
                 return view('pages.restaurantpage')->with(array('data'=>$data,'restaurant'=>$oRestarant));
             }
@@ -186,7 +196,28 @@ class HomeController extends controller
              * Count how many reviews was written by the user
              */
             $dReviewsCount = DB::table("reviews")->where(array("id_user"=>$aUserData[0]->id_user))->count(array("*"));
+            $aActivtiesList = DB::table("activities")->where(array("id_user"=>$aUserData[0]->id_user))->orderBy("date_inserted","desc")->get(array("*"));
 
+            //Parse Activities
+            $aActivties = array();
+            $aTmpActivity = array();
+            foreach($aActivtiesList as $oActivity){
+                switch($oActivity->type){
+                    case "review":
+                    $aTmp = DB::table("reviews")->where(array("id_review"=>$oActivity->id_other))->get(array("*"));
+                    if(count($aTmp)!=0){
+                        $aRestaurantName=DB::table("restaurants")->where(array("id_restaurant"=>$aTmp[0]->id_restaurant))->get(array("restaurant_name","username"));
+                        $aTmpActivity['type']=$oActivity->type;
+                        $aTmpActivity['other_name']=$aRestaurantName[0]->restaurant_name;
+                        $aTmpActivity['content']=$aTmp[0]->body;
+                        $aTmpActivity['rating']=$aTmp[0]->rating;
+                        $aTmpActivity['date']=$oActivity->date_inserted;
+                        $aTmpActivity['username']=$aRestaurantName[0]->username;
+                        $aActivties[]=$aTmpActivity;
+                    }
+                    break;
+                }
+            }
             /*
              * Put the reviews count to 0 if there's no reviews
              */
@@ -212,7 +243,7 @@ class HomeController extends controller
             /*
              * Show the normal user profile page, pass the needed data with the page
              */
-            return view('pages.profilepage')->with(array('data'=>$data,'aUser'=>$aUser));
+            return view('pages.profilepage')->with(array('data'=>$data,'aUser'=>$aUser,'aActivities'=>$aActivties));
         }
         public function login(){
             //Check if the user is authorized to be on the login page
@@ -339,16 +370,13 @@ class HomeController extends controller
             if(isset($aData['food_health'])){
                 $query->where('healthy','=',$aData['food_health']);
             }
-            if(!empty($aData['from_price']) || !empty($aData['to_price'])){
-                $dTo=0;
-                $dFrom=0;
-                if(empty($aData['from_price'])) {
-                    $dFrom = 1;
+            if(isset($aData['price_range'])) {
+                $aPriceRange= explode(" - ", $aData['price_range']);
+                $dFrom = trim(str_replace('$','',$aPriceRange[0]));
+                $dTo = trim(str_replace('$','',$aPriceRange[1]));
+                if(isset($dTo) && isset($dFrom)) {
+                    $query->whereBetween("price", array($dFrom, $dTo));
                 }
-                if(empty($aData['to_price'])){
-                    $dTo=1000;
-                }
-                $query->whereBetween("price",array($dFrom,$dTo));
             }
             $aRestaurantsIds = $query->get(array("id_restaurant"));
             foreach($aRestaurantsIds as $aRestaurantsId){
@@ -390,6 +418,7 @@ class HomeController extends controller
          */
         public function search(){
             $aRequest = \Request::all();
+
             //get Restaurants List based on the search request
             $aRestaurants= self::GetRestaurantsList($aRequest);
 

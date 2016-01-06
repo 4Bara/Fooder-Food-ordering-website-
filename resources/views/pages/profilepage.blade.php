@@ -60,12 +60,19 @@
     </div>
     <div class="col-md-6" id="middle-section">
         <div id="activities-section">
-            <h2>My Activities</h2>
-            <div class="row" id="activity">
-                {{--<img id="activity-picture" src="https://upload.wikimedia.org/wikipedia/commons/1/13/Facebook_like_thumb.png"/>--}}
-                <p id="activity-content">Bara,Wrote a reivew about <a href="">Macdonalds</a></p>
-                <p id="activity-date">2015-11-11 12:30:22</p>
-            </div>
+            <p id="title">Activities</p>
+                @foreach($aActivities as $oActivity)
+                <div class="row activity">
+                    @if($oActivity['type']=="review")
+                        <img id="picture" src="{{"../cover.jpg"}}"/><span>{{$aUser['user']->username}}</span>
+                        <p><b>Review</b></p>
+                        <p id="other-name">Wrote a review about <a href="http://localhost/fooder/public/p/{{$oActivity['username']}}">{{$oActivity['other_name']}}</a></p>
+
+                        <p id="date">{{$oActivity['date']}}</p>
+                    @endif
+                </div>
+                @endforeach
+
         </div>
     </div>
     <div class="col-md-3" id="right-side">

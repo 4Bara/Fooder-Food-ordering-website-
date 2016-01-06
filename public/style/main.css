@@ -94,6 +94,10 @@ html,body{
     margin-top: 22px;
     vertical-align: middle;
 }
+#middle-section{
+    padding-top:0px;
+    margin-top:0px;
+}
 .btn-upload{
     position: relative;
     margin-top: 37px;
@@ -219,9 +223,16 @@ footer {
 .search-result #price_range{
     font-size:medium;
 }
+#amount{
+    background-color:whitesmoke;
+}
+#slider-range{
+    width:95%;
+}
 .search-filter{
-   background-color:lightgray;;
-    width:100%;
+   background-color:whitesmoke;
+   width:100%;
+    padding:5px;
 }
 .search-result label{
     float:left;
@@ -238,25 +249,44 @@ footer {
     margin-top:10px;
     margin-left:20px;
 }
-.offer-box #offer-picture{
-    width:100%;
-    height:300px;
+.offer-box{
+   background-color:ghostwhite;
+    font-size:15pt;
+    text-align: center;
+    margin-bottom:10px;
 }
-.offer-box #offer_title{
-    font-size:x-large;
+#offer-picture {
+    height: 200px;
 }
-.offer-box #offer_price{
-    font-size: x-large;
+#offer_title{
+    font-size:17pt;
+}
+#offer_price span{
     color:red;
 }
-.offer-box{
-    border:2px solid black;
-    text-align: center;
-}
-.offer-box #offer_restaurant{
-    font-size: medium;
+#offer_description{
+padding-left:30px;
+    text-align: left;
 }
 
+.menu_header {
+    text-align: center;
+}
+.menu_header .restaurant-name{
+    font-size:25pt;
+}
+
+.menu_header .menu_name{
+    font-size:22pt;
+
+}
+
+.offer_price {
+    font-size:22pt;
+}
+.items{
+
+}
 /*Profile Page*/
 #left-side{
 
@@ -288,26 +318,28 @@ footer {
 #compliment img{
     width:25px;
 }
-#middle-section{
-    border:1px solid #b9def0;
-}
-#activites-section{
-    border:1px solid black;
-}
-#activity{
-    border:1px solid green;
-}
-#activity-content{
-    font-size:xx-large;
-}
-#activity-picture{
-    width:20%;
-    float:left;
-    margin:10px;
-}
-#activity-date{
 
+.activity{
+    margin-bottom:10px;
+    padding:10px;
+    background-color: white;
 }
+.activity #picture{
+    padding:5px;
+    width:50px;
+    height:50px;
+}
+.activity #content{
+font-size:20pt;
+}
+.activity #date{
+    position:relative;
+    bottom:1px;
+}
+#activities-section #title{
+    font-size: 19pt;
+}
+
 .fa{
     margin-left:10px;
 }
@@ -485,19 +517,23 @@ text-align: center;
     font-size:25pt;
 }
 .item{
-    border:solid 2px black;
+    border-radius: 12px;
     margin-top:5px;
+    background-color:white;
 }
 .col-xs-1{
     width:10%;
 }
-.item #item-img{
+#item-img{
     width:100%;
 }
 .item-description p{
     text-align: left;
 }
 
+.padding0{
+    padding:0px;
+}
 /*Add New Menu Page Styling*/
 .add-menu-title{
     text-align: center;

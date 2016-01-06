@@ -25,21 +25,21 @@
                             <i class="glyphicon glyphicon-user"></i> {{$data['username']}} <span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li><a href="{{URL::asset('p/'.$data['username'])}}">
-                                    <i class="glyphicon glyphicon-user"></i>Profile</a></li>
+                                    <i class="glyphicon glyphicon-user"></i> Profile</a></li>
                             <li>
                                 @if(isset($data['user_type']) && $data['user_type']=='restaurant')
                                     <a href="{{URL::asset('showRestaurantsOrders')}}">
-                                        <i class="glyphicon glyphicon-arrow-up"></i>My Orders
+                                        <i class="glyphicon glyphicon-arrow-up"></i> My Orders
                                     </a>
                                 @else
                                     <a href="{{URL::asset('showOrders')}}">
-                                        <i class="glyphicon glyphicon-arrow-up"></i>My Orders
+                                        <i class="glyphicon glyphicon-arrow-up"></i> My Orders
                                     </a>
                                 @endif
                             </li>
                             <li><a href="#">
                                     <i class="glyphicon glyphicon-edit"></i>Settings</a></li>
-                            <li><a href="{{URL::asset('logout')}}"><i class="glyphicon glyphicon-log-out"></i>Logout</a></li>
+                            <li><a href="{{URL::asset('logout')}}"><i class="glyphicon glyphicon-log-out"></i> Logout</a></li>
                         </ul>
                     </li>
                 @endif

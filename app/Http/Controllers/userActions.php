@@ -72,19 +72,23 @@ class userActions extends controller
         $aTmpOrder = array();
         $aOrders = array();
         foreach($aOrdersList as $oOrder){
-            $aTmpOrder['restaurant_name']=DB::table('restaurants')->where(array('id_restaurant'=>$oOrder->id_restaurant))->get(array('restaurant_name'))[0];
+            $aOrder=DB::table('restaurants')->where(array('id_restaurant'=>$oOrder->id_restaurant))->get(array('restaurant_name','username','telephone','email','website'))[0];
+            $aTmpOrder['restaurant']=$aOrder;
             $oOrderDetails = json_decode($oOrder->order_details);
+            $oOrder->date_inserted = Backend::ago(new \DateTime($oOrder->date_inserted));
             $oOrder->order_details = $this->parseOrderDetails($oOrderDetails);
             $oOrder->status = str_replace('_',' ',$oOrder->status);
             $aTmpOrder['info']=$oOrder;
             $aOrders[]=$aTmpOrder;
+            $aTmpOrder=[];
         }
         $data = Backend::LoginData();
         $data['isRestaurant']=false;
 
-     //   dd($aOrders);
         return view('pages.orders')->with(array('orders'=>$aOrders,'data'=>$data));
     }
+
+
     public function showRestaurantsOrders(){
         if(!Backend::validateUser()){
             return redirect('/');
@@ -94,16 +98,24 @@ class userActions extends controller
         $aTmpOrder = array();
 
         foreach($aOrdersList as $oOrder){
-            $aTmpOrder['customer']=DB::table('users')->where(array('id_user'=>$oOrder->id_user))->get(array('first_name','last_name','user_mobile'))[0];
+            $aTmpOrder['customer']=DB::table('users')->where(array('id_user'=>$oOrder->id_user))->get(array('first_name','last_name','user_mobile','username','email'))[0];
             $oOrderDetails =  json_decode($oOrder->order_details);
             $oOrder->order_details = $this->parseOrderDetails($oOrderDetails);
             $oOrder->status = str_replace('_',' ',$oOrder->status);
+            $oLocation=json_decode($oOrder->location);
+            if(!empty($oLocation->lat)) {
+                $aTmpOrder['location'] = "http://maps.google.com/maps?q=$oLocation->lat,$oLocation->long";
+            }
             $aTmpOrder['info']=$oOrder;
+
+            $oOrder->date_inserted = Backend::ago(new \DateTime($oOrder->date_inserted));
             $aOrders[]=$aTmpOrder;
+            $aTmpOrder=[];
         }
+
         $data = Backend::LoginData();
         $data['isRestaurant']=true;
-        $data['status']=array('preparing','cancled','not approved yet','on the way','done');
+        $data['status']=array('preparing','cancled','not approved yet','on the way');
         //dd($aOrders);
         return view('pages.orders')->with(array('orders'=>$aOrders,'data'=>$data));
     }
@@ -117,7 +129,9 @@ class userActions extends controller
         foreach($oOrderDetails->items as $oItem){
             $aTmpItem = array();
             $aTmpItem['id_item']=$oItem->id_item;
-            $aTmpItem['name']=DB::table('food')->where(array('id_item'=>$oItem->id_item))->get(array('name'))[0]->name;
+            $aItem=DB::table('food')->where(array('id_item'=>$oItem->id_item))->get(array('name','price'));
+            $aTmpItem['price']=$aItem[0]->price;
+            $aTmpItem['name']=$aItem[0]->name;
             $aTmpItem['qty']=$oItem->qty;
             $aTmpItem['spicy']=$oItem->spicy;
             $aItems[]=$aTmpItem;

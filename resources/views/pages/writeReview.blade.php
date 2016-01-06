@@ -13,7 +13,7 @@
             </div>
             <form name="review" action="backend/submitReview" id="review-form" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="_token" value="{{ Session::token() }}">
-                <input type="hidden" name="username" value="{{$data['username']}}"/>
+                <input type="hidden" name="username" value="{{$data['restaurant_username']}}"/>
                 <div class="row">
                     <div class="col-md-8">
                         <textarea name="review" id="review-body" class="form-control" style="overflow: hidden; resize: none" cols="20" rows="12"></textarea>

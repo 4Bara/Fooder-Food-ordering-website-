@@ -92,13 +92,19 @@ class restaurantController extends controller
         if(empty($aRestaurantData)){
             //Go the previous page
         }
+        //Get the login data
         $data = Backend::LoginData();
+
+        //Put the page_type to menu to indicate that we will be dealing with menus
         $data['page_type']='menu';
+        //Get the Restaurant id to be used in search
         $dIdRestaurant = $aRestaurantData[0]->id_restaurant;
-        $aMenus = DB::table('menus')->
-                    where(array('id_restaurant'=>$dIdRestaurant,'status'=>'active'))->paginate(2);
+
+        //Get the menus for this restauarnt, paginated
+        $aMenus = DB::table('menus')->where(array('id_restaurant'=>$dIdRestaurant,'status'=>'active'))->paginate(2);
         $aMenus->setPath('menus');
         $aMenus->appends(["username"=>$username]);
+
         return view('/pages.menusList')->with(array('menus'=>$aMenus,'data'=>$data));
     }
 
@@ -118,10 +124,9 @@ class restaurantController extends controller
         foreach($aOfferItems as $oOfferItem){
             $aItemsIds = json_decode($oOfferItem->items);
         }
-
-        $aData = array('page_type'=>'offer');
-        $aSession = \Session::all();
-        if($aSession['user_type']=='restaurant'){
+        $aData= Backend::LoginData();
+        $aData['page_type']='offer';
+        if($aData['user_type']=='restaurant'){
             $aData['showUnits'] = false;
         }else{
             $aData['showUnits'] = true;
@@ -241,30 +246,41 @@ class restaurantController extends controller
      */
     public function writeReview($aRequest){
         $data = Backend::LoginData();
-        $data['username']=$aRequest;
+        $data['restaurant_username']=$aRequest;
         return view('/pages.writeReview')->with(array('data'=>$data));
     }
 
     public function submitReview(){
+        //Get the request from the submitted page
         $aRequest = \Request::all();
+        //Get the Session
         $aSession = \Session::all();
-        //GET RESTAURANT USERNAME
+        //GET RESTAURANT ID
         $aRestaurant = DB::table('restaurants')
                        ->where(array('username'=>$aRequest['username']))
                        ->get(array("id_restaurant"));
+
         $oRestaurant = $aRestaurant[0];
+
         $aReview['id_restaurant']=$oRestaurant->id_restaurant;
         $aReview['id_user']=$aSession['id_user'];
         $aReview['body']=$aRequest['review'];
         $aReview['rating']=$aRequest['rating'];
         $oImage = $aRequest['review-picture'];
+
+        //Uplaod the pociture of the review
         $FullImagePath = Backend::uploadPhotos($oImage, 'review-picture');
         $aReview['review_image'] = $FullImagePath;
         $aReview['date_created']=Date('Y-m-d h:i:s');
-        DB::table('reviews')->insert($aReview);
+        //Insert the data into Reviews Table and get it's id
+        $dReviewId=DB::table('reviews')->insertGetId($aReview);
+        //Add Activity to it's table
+        //save activity into the DB:
+        Backend::addActivity($aSession['id_user'],'review',$dReviewId);
+
+        //Redirect the user to the restaurant's page.
         return redirect('/p/'.$aRequest['username']);
     }
-
     public function showReviews(){
        // dd(\Request::all());
         $aRequest = \Request::all();

@@ -45,14 +45,17 @@ class CartController extends Controller{
      */
     public function checkout(){
         //Check if user is logged in
+
         if(!Backend::validateUser()){
             return redirect('/');
         }
+
         $aRequest = \Request::all();
 
         //This is a temprory array that will be used to create a temp item to be used in saved and any processing on item before saving it.
         $tempItem = array();
-
+        if(!isset($aRequest['items']))
+           return;
         /*
          * Total price will be saved here,
          * this also will be used to indicate the last price that will be required on each restaurant
@@ -70,6 +73,9 @@ class CartController extends Controller{
             $aRestaurants[$oItem->id_restaurant]['items'][]=$tempItem;
             $tempItem=array();
         }
+        $sNote = $aRequest['note'];
+        $sLocation = json_encode($aRequest['location']);
+
         foreach($aRestaurants as $id_restaurant => $aRestaurant){
             $id_user = \Session::all()['id_user'];
             $sOrderDetails = (json_encode($aRestaurant));
@@ -77,12 +83,14 @@ class CartController extends Controller{
                 'id_user'=>$id_user,
                 'id_restaurant'=>$id_restaurant,
                 'order_details'=>$sOrderDetails,
+                'note'=>$sNote,
+                'location'=>$sLocation,
                 'date_inserted'=>Date('Y-m-d h:i:s'),
                 'status'=>'not_approved_yet'
             );
             DB::table('orders')->insert($aOrder);
         }
         \Session::forget('cart');
-        return redirect('pages.mainpage');
+        return redirect('/');
     }
 }

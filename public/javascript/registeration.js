@@ -163,6 +163,7 @@ $(document).ready(function() {
         //no errors in form param
         return true;
     }
+
     function getLocation() {
         if (navigator.geolocation) {
            navigator.geolocation.getCurrentPosition(showPosition);
@@ -193,6 +194,7 @@ $(document).ready(function() {
         google.maps.event.addListener(map, "idle", function(){
             google.maps.event.trigger(map, 'resize');
         });
+
         var marker = new google.maps.Marker({
             position: myLatLng,
             draggable: true,

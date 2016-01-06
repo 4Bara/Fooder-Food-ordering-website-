@@ -103,4 +103,35 @@ Class Backend extends controller {
                 }
                 return $aData;
         }
+        /*
+         * This function will add to the activites table with the needed data
+         */
+        public static function  addActivity($dIdUser,$sType,$dIdOther){
+                DB::table("activities")->insert(array(
+                    "id_user"=>$dIdUser,
+                    "type"=>$sType,
+                    "id_other"=>$dIdOther,
+                    "date_inserted"=>date('Y-m:d h:i:s'))
+                );
+        }
+        /*
+   * This function was taken from PHP Documentation website
+   */
+        public static function pluralize( $count, $text )
+        {
+                return $count . ( ( $count == 1 ) ? ( " $text" ) : ( " ${text}s" ) );
+        }
+
+        public static function ago( $datetime )
+        {
+                $interval = date_create('now')->diff( $datetime );
+                $suffix = ( $interval->invert ? ' ago' : '' );
+                if ( $v = $interval->y >= 1 ) return Backend::pluralize( $interval->y, 'year' ) . $suffix;
+                if ( $v = $interval->m >= 1 ) return Backend::pluralize( $interval->m, 'month' ) . $suffix;
+                if ( $v = $interval->d >= 1 ) return Backend::pluralize( $interval->d, 'day' ) . $suffix;
+                if ( $v = $interval->h >= 1 ) return Backend::pluralize( $interval->h, 'hour' ) . $suffix;
+                if ( $v = $interval->i >= 1 ) return Backend::pluralize( $interval->i, 'minute' ) . $suffix;
+                return Backend::pluralize( $interval->s, 'second' ) . $suffix;
+        }
+
 }

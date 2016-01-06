@@ -15,9 +15,10 @@
         @endif
         <div class="col-md-2"></div>
         <div class="col-md-8">
-            @if(empty($menus) && isset($data) && $data['page_type']!='offer')
+
+        @if(isset($menus) &&count($menus)==0 && isset($data) && $data['page_type']!='offer')
                 <h2>There's no Menus</h2>
-            @elseif(empty($menus) && isset($data) && $data['page_type']=='offer')
+            @elseif(isset($menus) && count($menus)==0  && isset($data) && $data['page_type']=='offer')
                 <h2>There's no Offers</h2>
             @endif
             <div class="menus-list">

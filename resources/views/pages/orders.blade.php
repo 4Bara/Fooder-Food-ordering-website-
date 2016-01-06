@@ -3,142 +3,193 @@
     <style>
         .title{
             text-align: center;
-            font-size:20pt;
+            font-size:25pt;
+            margin-bottom:25px;
         }
         .info{
             font-size:15pt;
+            float:left;
+            width:100%;
+            border-radius: 4px 4px 0px 0px;
+            text-align:center;
+            color:black;
+            background-color:#CCCCCC;
+        }
+        .info p{
+            margin-top:10px;
+            margin-left:15px;
         }
         .order{
-            font-size:12pt;
-            border:1px solid black;
+            background-color: white;;
+            margin-bottom:20px;
+
+            width:100%;
+            padding:15px;
+        }
+        .padding0{
+            padding:0px;
+        }
+        .col-md-2{
+            padding:0px;
+        }
+        .total_amount{
+            font-weight: bold;
+            color: #fff;
+        }
+
+    .items-info{
+        text-align: center;
+        background-color: #73AF73;
+        color:white;
+        border-radius: 4px;
+    }
+        .order-item > .row:nth-child(even){
+        background-color: #CCCCCC;
+        }
+        .order-item > .row:nth-child(odd){
+            background-color: #fcfcfc
         }
     </style>
     <script src="{{asset("../public/javascript/order.js")}}" ></script>
 @stop
 
 @section('content')
-<div  class="col-md-2">
-
-</div>
-    <div class="col-md-8">
-        <div class="row title">My Orders</div>
-        <div class="orders row">
-            <div class="row info">
-                <div class="col-xs-2">
-                    <p>Order id</p>
-                </div>
-                <div class="col-xs-2">
-                    @if($data['isRestaurant'])
-                        <p>Customer</p>
-                    @else
-                        <p>Restaurant Name</p>
-                    @endif
-                </div>
-                @if($data['isRestaurant'])
-                <div class="col-xs-2">
-                        <p>Mobile #</p>
-                </div>
-                @endif
-                <div class="col-xs-3">
-                    <p>Order Status</p>
-                </div>
-                <div class="col-xs-3">
-                    <p>Ordered on</p>
-                </div>
-            </div>
+<div class="container">
+        @if($data['isRestaurant'])
+            <div class="row title">Orders Screen</div>
+        @else
+            <div class="row title">My Orders</div>
+        @endif
+        <div class="orders">
             @foreach($orders as $aOrder)
-                <div class="row order">
-                    <div class="col-xs-2">
-                        <input type="hidden" class="id_order" value="{{$aOrder['info']->id_order}}"/>
-                       {{$aOrder['info']->id_order}}
+                <div class="print-class">
+                <div class=" info">
+                    <div class="col-md-2 padding0">
+                        <p>Order</p>
                     </div>
-                    <div class="col-xs-2">
-                       {{isset($aOrder['restaurant_name']->restaurant_name)?$aOrder['restaurant_name']->restaurant_name:$aOrder['customer']->first_name.' '.$aOrder['customer']->last_name}}
-                    </div>
-                    @if($data['isRestaurant'])
-                        <div class="col-xs-2">
-                            <p>{{$aOrder['customer']->user_mobile}}</p>
-                        </div>
-                    @endif
-                    <div class="col-xs-3">
+                    <div class="col-md-2">
                         @if($data['isRestaurant'])
-                            <select class="order_status">
-                                @foreach($data['status'] as $status)
-                                    <option @if($aOrder['info']->status==$status) selected @endif value="{{$status}}">{{$status}}</option>
-                                    @endforeach
-                            </select>
+                            <p>Customer</p>
                         @else
-                            {{$aOrder['info']->status}}
+                            <p>Restaurant Name</p>
                         @endif
                     </div>
-                    <div class="col-xs-3">
-                        <p>{{$aOrder['info']->date_inserted}}</p>
+
+                    <div class="col-md-2">
+                        <p>Status</p>
                     </div>
-                    <div class="row">
+                    <div class="col-md-2">
+                        <p>Details</p>
+
+                    </div>
+                    @if($data['isRestaurant'])
+                        <div class="col-md-2">
+                           <p title="click here to print the order"><a href='' style='background-color: mediumpurple' class='btn btn-primary printer' ><i class="glyphicon glyphicon-print"></i></a></p>
+                        </div>
+                    @endif
+                </div>
+                <div class="row order white-box">
+                    <div class="col-md-2 padding0">
+                        <input type="hidden" class="id_order" value="{{$aOrder['info']->id_order}}"/>
+                      <p style="font-size:25px;color:cornflowerblue">#{{$aOrder['info']->id_order}}</p>
+                      <p class="order-time"><i class="glyphicon glyphicon-time"></i> {{$aOrder['info']->date_inserted}}</p>
+                      <p style="padding:5px;">Note:{{$aOrder['info']->note}}</p>
+                    </div>
+                    <div class="col-md-2">
+                       @if(isset($aOrder['restaurant']->restaurant_name))
+                           <p><i class="glyphicon glyphicon-cutlery"></i><a href="p/{{$aOrder['restaurant']->username}}">{{$aOrder['restaurant']->restaurant_name}}</a></p>
+                           <p><i class="glyphicon glyphicon-phone-alt"></i> {{$aOrder['restaurant']->telephone}}</p>
+                            <p><i class="glyphicon glyphicon-envelope"></i>  <a href="mailto:{{$aOrder['restaurant']->email}}"> {{$aOrder['restaurant']->email}}</a></p>
+                            <p><i class=""></i>{{$aOrder['restaurant']->website}}</p>
+                          @else
+                            <p><i class="glyphicon glyphicon-user"></i> <a href="p/{{$aOrder['customer']->username}}">{{$aOrder['customer']->first_name.' '.$aOrder['customer']->last_name}}</a></p>
+                        @endif
+                        @if($data['isRestaurant'])
+                               <p> <i class="glyphicon glyphicon-phone"></i> {{$aOrder['customer']->user_mobile}}</p>
+                               <p><i class="glyphicon glyphicon-envelope"> </i><a href="mailto:{{$aOrder['customer']->email}}">Email</a></p>
+                               @if(isset($aOrder['location']))
+                                   <p><i class="glyphicon glyphicon-map-marker"> </i><a target="_blank" href="{{$aOrder['location']}}">Location</a> </p>
+                               @endif
+                        @endif
+                    </div>
+
+                    <div class="col-md-2">
+                        @if($data['isRestaurant'])
+                                @foreach($data['status'] as $status)
+                                    @if($aOrder['info']->status==$status)
+                                        <a class="btn btn-block btn-success order_status" disabled='disabled' style="">{{$status}}</a>
+                                    @else
+                                        <a class="btn btn-block btn-danger order_status" style="">{{$status}}</a>
+                                    @endif
+                                @endforeach
+                        @else
+                        <p class="btn btn-block">{{$aOrder['info']->status}}</p>
+                        @endif
+                    </div>
+
+                    <div class="col-md-6">
                         <div class="col-md-12">
-                            <div class="row">
+                            <div class="row items-info" style="">
+                                <div class="col-md-5">
+                                    <p>NAME</p>
+                                </div>
+                                    <div class="col-md-2">
+                                        QTY
+                                    </div>
+                                <div class="col-md-2">
+                                     <div class="spicy">
+                                        SPICY
+                                    </div>
+                                </div>
                                 <div class="col-md-3">
-                                    <p>Total Amount:<span>{{$aOrder['info']->order_details['total_price']}}$</span></p>
+                                    PRICE
                                 </div>
-                            </div>
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        Order Details
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <input type="hidden" class="id_item" value="432"/>
-                                    <div class="col-md-4">
-                                       Meal Name:
-                                    </div>
-                                    <div class="col-xs-2">
-                                        <div class="item_qty">
-                                            <input type="hidden" value="413241"/>
-                                            QTY:
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="spicy">
-                                            <input type="hidden" value="321"/>
-                                            spicy:
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        Total Price:
-                                    </div>
-                                </div>
-                            @foreach($aOrder['info']->order_details['items'] as $item)
-                                <div class="row">
-                                    <input type="hidden" class="id_item" value="{{$item['id_item']}}"/>
-                                    <div class="col-md-4">
-                                    {{$item['name']}}
-                                    </div>
-                                    <div class="col-xs-2">
-                                        <div class="item_qty">
-                                            <input type="hidden" value="{{$item['qty']}}"/>
-                                            {{$item['qty']}}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="spicy">
-                                            <input type="hidden" value="{{$item['spicy']}}"/>
-                                            {{$item['spicy']}}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        Total Price:
-                                    </div>
-                                </div>
-                             @endforeach
                             </div>
                         </div>
+                        <div class="col-md-12">
+                        <div class="order-item">
+
+                        @foreach($aOrder['info']->order_details['items'] as $item)
+                            <div class="row ">
+                                <input type="hidden" class="id_item" value="{{$item['id_item']}}"/>
+                                <div class="col-md-5">
+                                    {{$item['name']}}
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="item_qty text-center">
+                                        <input type="hidden" value="{{$item['qty']}}"/>
+                                        {{$item['qty']}}
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="spicy text-center">
+                                        <input type="hidden" value="{{$item['spicy']}}"/>
+                                        {{$item['spicy']}}
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="price text-center">
+                                        <input type="hidden" value="{{$item['price']}}"/>
+                                        ${{$item['price']}}
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                        </div>
+                        </div>
+                            <div class="col-md-9">
+                            </div>
+                            <div class="col-md-3" style="background-color: #f9f9f9;margin-bottom: 20px;padding: 5px;text-align: center;">
+                                 <span style="color: red;font-weight: bold;">Total : ${{0.16*$aOrder['info']->order_details['total_price']+$aOrder['info']->order_details['total_price']}}</span>
+                            </div>
+                        @if($data['isRestaurant'])
+                             <a class="btn pull-right btn-primary order_status" style="">DONE</a>
+                        @endif
                     </div>
+                    </div>
+                </div>
             @endforeach
                 </div>
 
         </div>
-    </div>
-    <div class="col-md-2">
-
-    </div>
 @endsection
